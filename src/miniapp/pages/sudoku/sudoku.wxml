@@ -1,0 +1,142 @@
+<!-- pages/sudoku/sudoku.wxml —— 数独 -->
+<view class="page">
+  <!-- ========== 难度选择 ========== -->
+  <view class="menu-mask" wx:if="{{showDifficultySelect}}">
+    <view class="menu-card">
+      <view class="menu-close" bindtap="closeMenu" wx:if="{{status !== 'idle'}}">✕</view>
+      <text class="menu-icon">🧩</text>
+      <text class="menu-title">数独</text>
+      <text class="menu-sub">{{status === 'idle' ? '请选择难度' : '选择难度将重新开始'}}</text>
+      <view class="menu-list">
+        <view class="menu-item" data-difficulty="easy" bindtap="selectDifficulty">
+          <text class="mi-icon">🌱</text>
+          <view class="mi-body">
+            <text class="mi-name">简单</text>
+            <text class="mi-desc">30 个空格</text>
+          </view>
+          <text class="mi-arrow">›</text>
+        </view>
+        <view class="menu-item" data-difficulty="medium" bindtap="selectDifficulty">
+          <text class="mi-icon">🌿</text>
+          <view class="mi-body">
+            <text class="mi-name">中等</text>
+            <text class="mi-desc">45 个空格</text>
+          </view>
+          <text class="mi-arrow">›</text>
+        </view>
+        <view class="menu-item" data-difficulty="hard" bindtap="selectDifficulty">
+          <text class="mi-icon">🔥</text>
+          <view class="mi-body">
+            <text class="mi-name">困难</text>
+            <text class="mi-desc">52 个空格</text>
+          </view>
+          <text class="mi-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 游戏区域 ========== -->
+  <block wx:if="{{status === 'playing' || status === 'won'}}">
+    <!-- 状态栏 -->
+    <view class="status-bar">
+      <view class="sb-item">
+        <text class="sb-label">难度</text>
+        <text class="sb-value">{{difficultyName}}</text>
+      </view>
+      <view class="sb-item">
+        <text class="sb-label">进度</text>
+        <text class="sb-value">{{filled}}/{{blanks}}</text>
+      </view>
+      <view class="sb-item">
+        <text class="sb-label">用时</text>
+        <text class="sb-value">{{elapsed}}</text>
+      </view>
+      <view class="sb-item">
+        <text class="sb-label">错误</text>
+        <text class="sb-value err">{{errors}}</text>
+      </view>
+    </view>
+
+    <!-- 棋盘 -->
+    <view class="board-wrap">
+      <view class="board">
+        <view
+          class="cell {{item.isSelected ? 'selected' : ''}} {{item.isConflict ? 'conflict' : ''}} {{item.isEmptyCandidate ? 'empty-candidate' : ''}} {{item.isSameNumber && !item.isSelected ? 'same-num' : ''}} {{item.isFixed ? 'fixed' : ''}} {{item.isHint ? 'hint' : ''}} {{item.col === 2 || item.col === 5 ? 'br-thick' : ''}} {{item.col === 0 || item.col === 3 || item.col === 6 ? 'bl-thick' : ''}} {{item.row === 2 || item.row === 5 ? 'bb-thick' : ''}} {{item.row === 0 || item.row === 3 || item.row === 6 ? 'bt-thick' : ''}}"
+          wx:for="{{board}}"
+          wx:key="row_col"
+          data-row="{{item.row}}"
+          data-col="{{item.col}}"
+          bindtap="onCellTap"
+        >
+          <!-- 已填入数字 -->
+          <text wx:if="{{item.value > 0}}" class="cell-value">{{item.value}}</text>
+          <!-- 角标记：3×3 小数字 -->
+        <view wx:if="{{item.notes && item.notes.length > 1}}" class="notes-grid">
+          <text class="note-num" wx:for="{{[1,2,3,4,5,6,7,8,9]}}" wx:key="*this" wx:for-item="n">
+            {{item.notes.indexOf(n) >= 0 ? n : ''}}
+          </text>
+        </view>
+        <!-- 中心标记：仅 1 个候选数时放大显示 -->
+        <text wx:elif="{{item.notes && item.notes.length === 1}}" class="cell-center-mark">{{item.notes[0]}}</text>
+        <!-- 冲突预警：候选数为空（前期逻辑错误） -->
+        <text wx:elif="{{item.isEmptyCandidate}}" class="cell-empty-candidate">!</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作栏 -->
+    <view class="actions">
+      <view class="act-btn" bindtap="onUndo" hover-class="act-hover">↩ 撤销</view>
+      <view class="act-btn" bindtap="onErase" hover-class="act-hover">⌫ 擦除</view>
+      <view class="act-btn {{noteMode ? 'note-active' : ''}}" bindtap="onToggleNoteMode" hover-class="act-hover">✏️ 笔记</view>
+      <view class="act-btn" bindtap="onHint" hover-class="act-hover">💡 提示</view>
+      <view class="act-btn" bindtap="onReset" hover-class="act-hover">🔄 重置</view>
+      <view class="act-btn" bindtap="showMenu" hover-class="act-hover">📋 菜单</view>
+    </view>
+
+    <!-- 数字键盘 -->
+    <view class="numpad">
+      <view
+        class="num-btn {{item.completed ? 'num-done' : ''}}"
+        wx:for="{{numButtons}}"
+        wx:key="num"
+        data-num="{{item.num}}"
+        bindtap="onNumberTap"
+        hover-class="num-hover"
+      >
+        <text>{{item.completed ? '✓' : item.num}}</text>
+      </view>
+    </view>
+  </block>
+</view>
+
+<!-- 胜利弹窗 -->
+<view class="win-overlay" wx:if="{{showWin}}" catchtouchmove="noop">
+  <view class="win-card" catchtap="noop">
+    <text class="win-icon">🎉</text>
+    <text class="win-title">恭喜通关！</text>
+    <text class="win-sub">你成功完成了数独</text>
+
+    <view class="win-scores">
+      <view class="ws-item">
+        <text class="ws-label">难度</text>
+        <text class="ws-value">{{difficultyName}}</text>
+      </view>
+      <view class="ws-divider"></view>
+      <view class="ws-item">
+        <text class="ws-label">用时</text>
+        <text class="ws-value">{{winTime}}</text>
+      </view>
+      <view class="ws-divider"></view>
+      <view class="ws-item">
+        <text class="ws-label">错误</text>
+        <text class="ws-value err">{{errors}}</text>
+      </view>
+    </view>
+
+    <view class="win-btns">
+      <view class="win-btn primary" bindtap="onNewGame">新游戏</view>
+    </view>
+  </view>
+</view>

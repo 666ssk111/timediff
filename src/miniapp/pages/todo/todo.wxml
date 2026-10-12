@@ -1,0 +1,104 @@
+<!-- pages/todo/todo.wxml —— 待办事项清单 -->
+<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
+  <!-- 顶部统计 -->
+  <view class="header">
+    <view class="header-title">待办清单</view>
+    <view class="header-stats">
+      <view class="stat">
+        <text class="stat-num">{{stats.active}}</text>
+        <text class="stat-label">未完成</text>
+      </view>
+      <view class="divider"></view>
+      <view class="stat">
+        <text class="stat-num">{{stats.done}}</text>
+        <text class="stat-label">已完成</text>
+      </view>
+      <view class="divider"></view>
+      <view class="stat">
+        <text class="stat-num">{{stats.total}}</text>
+        <text class="stat-label">全部</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 输入区 -->
+  <view class="input-card">
+    <view class="input-bar">
+      <input
+        class="input"
+        placeholder="添加新的待办事项..."
+        placeholder-class="input-ph"
+        value="{{input}}"
+        bindinput="onInput"
+        confirm-type="done"
+        bindconfirm="add"
+      />
+      <view class="add-btn" bindtap="add" hover-class="add-btn-hover">＋</view>
+    </view>
+
+    <!-- 优先级 -->
+    <view class="priority-row">
+      <view class="priority-chip {{priority === 2 ? 'on high' : ''}}" data-priority="2" bindtap="setPriority">
+        <text>🔴 高</text>
+      </view>
+      <view class="priority-chip {{priority === 1 ? 'on mid' : ''}}" data-priority="1" bindtap="setPriority">
+        <text>🟡 中</text>
+      </view>
+      <view class="priority-chip {{priority === 0 ? 'on low' : ''}}" data-priority="0" bindtap="setPriority">
+        <text>🔵 低</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 筛选 -->
+  <view class="tabs">
+    <view class="tab {{filter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="setFilter">全部</view>
+    <view class="tab {{filter === 'active' ? 'active' : ''}}" data-filter="active" bindtap="setFilter">未完成</view>
+    <view class="tab {{filter === 'done' ? 'active' : ''}}" data-filter="done" bindtap="setFilter">已完成</view>
+  </view>
+
+  <!-- 清空已完成 -->
+  <view class="clear-done" wx:if="{{filter === 'done' && stats.done > 0}}" bindtap="clearDone">
+    清空已完成
+  </view>
+
+  <!-- 列表 -->
+  <view class="list" wx:if="{{displayItems.length > 0}}">
+    <view class="item {{item.done ? 'done' : ''}}" wx:for="{{displayItems}}" wx:key="id">
+      <view class="check {{item.done ? 'checked' : ''}}" data-id="{{item.id}}" bindtap="toggle">{{item.done ? '✓' : ''}}</view>
+      <view class="item-body" data-id="{{item.id}}" bindtap="edit">
+        <view class="title-row">
+          <text class="item-title">{{item.title}}</text>
+          <text class="p-tag {{item.priorityClass}}">{{item.priorityLabel}}</text>
+        </view>
+        <view class="item-meta">
+          <text class="item-time">{{item.created_at}}</text>
+          <text class="item-reminder-label" wx:if="{{item.reminder}}">⏰ {{item.reminderLabel}}</text>
+        </view>
+      </view>
+      <view class="remind-toggle {{item.reminder ? 'on' : ''}}" data-id="{{item.id}}" bindtap="toggleReminder" hover-class="remind-toggle-hover">
+        <text>{{item.reminder ? '🔔' : '🔕'}}</text>
+      </view>
+      <view class="del" data-id="{{item.id}}" bindtap="remove" hover-class="del-hover">✕</view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:else>
+    <view class="empty-icon">📝</view>
+    <view class="empty-text">暂无待办事项</view>
+    <view class="empty-sub">添加一条，开始规划你的今天</view>
+  </view>
+</scroll-view>
+
+<!-- 提醒弹窗 -->
+<view class="remind-overlay" wx:if="{{showRemindModal}}" catchtap="noop">
+  <view class="remind-card" catchtap="noop">
+    <text class="remind-icon">⏰</text>
+    <text class="remind-label">{{remindPriority}}</text>
+    <text class="remind-title">{{remindTitle}}</text>
+    <view class="remind-btns">
+      <view class="remind-btn primary" bindtap="closeRemindModal">我知道了</view>
+    </view>
+  </view>
+</view>

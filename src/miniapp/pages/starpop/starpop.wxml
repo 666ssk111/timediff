@@ -1,0 +1,141 @@
+<!-- pages/starpop/starpop.wxml -->
+<view class="page-container">
+  <view class="page">
+    <view class="hero">
+      <view class="hero-icon">⭐</view>
+      <view class="hero-title">消灭星星</view>
+      <view class="hero-desc">点击 2 个以上相连的同色星星即可消除</view>
+    </view>
+
+    <view class="info-panel">
+      <view class="info-left">
+        <view class="level-badge">{{level}}/{{totalLevels}}</view>
+        <text class="level-name">{{levelName}}</text>
+      </view>
+      <view class="info-right">
+        <view class="score-row">
+          <text class="score-label">本关得分</text>
+          <text class="score-num">{{score}}</text>
+        </view>
+        <view class="score-row">
+          <text class="score-label">累计总分</text>
+          <text class="score-num total">{{totalScore}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="timer-bar">
+      <view class="timer-fill {{timePercent <= 30 ? 'warn' : ''}}" style="width: {{timePercent}}%;"></view>
+      <view class="timer-text">
+        <text class="timer-icon">⏱</text>
+        <text class="timer-num {{timePercent <= 30 ? 'warn-text' : ''}}">{{timeLeft}}s</text>
+      </view>
+    </view>
+
+    <view class="canvas-wrap" wx:if="{{status === 'playing'}}" style="width: {{canvasPx}}px; height: {{canvasPx}}px;">
+      <canvas type="2d" id="starCanvas" class="game-canvas"
+        style="width: {{canvasPx}}px; height: {{canvasPx}}px;"
+        disable-scroll="{{true}}"
+        bindtouchstart="onTouchStart"
+        bindtouchend="onTouchEnd">
+      </canvas>
+      <view class="combo-text {{comboShow ? 'show' : ''}}">{{comboText}}</view>
+    </view>
+
+    <!-- 游戏结束占位：保持布局稳定，同时展示结果 -->
+    <view class="result-placeholder" wx:if="{{status !== 'playing'}}">
+      <text class="rp-icon">{{status === 'win' ? '🎉' : '😔'}}</text>
+      <text class="rp-title">{{status === 'win' ? '游戏结束' : '挑战结束'}}</text>
+      <view class="rp-stats">
+        <view class="rp-stat">
+          <text class="rp-label">本关得分</text>
+          <text class="rp-value">{{status === 'win' ? levelWinScore : score}}</text>
+        </view>
+        <view class="rp-stat">
+          <text class="rp-label">累计总分</text>
+          <text class="rp-value gold">{{totalScore}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-bar">
+      <view class="stars-remaining">
+        <text class="sr-icon">✦</text>
+        <text class="sr-text">剩余 {{starsLeft}} 颗</text>
+      </view>
+      <view class="btn-restart" bindtap="restartLevel">重玩本关</view>
+      <view class="btn-select-level" bindtap="showLevelPick">选择关卡</view>
+    </view>
+
+    <view style="height: 40rpx;"></view>
+  </view>
+
+  <!-- 过关弹窗 -->
+  <view class="overlay" wx:if="{{showLevelWin}}" catchtap="noop">
+    <view class="overlay-card win-card" catchtap="noop">
+      <text class="overlay-icon">🎉</text>
+      <text class="overlay-title">恭喜过关！</text>
+      <text class="overlay-level">{{levelName}}</text>
+      <view class="overlay-divider"></view>
+      <view class="overlay-stats">
+        <view class="stat-item">
+          <text class="stat-label">本关得分</text>
+          <text class="stat-value">{{levelWinScore}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">累计总分</text>
+          <text class="stat-value gold">{{totalScore}}</text>
+        </view>
+      </view>
+      <text class="overlay-prompt">是否进入下一关？</text>
+      <view class="overlay-btns">
+        <view class="overlay-btn secondary" bindtap="restartLevel">再玩一次</view>
+        <view class="overlay-btn primary" wx:if="{{!isLastLevel}}" bindtap="nextLevel">进入下一关</view>
+        <view class="overlay-btn primary" wx:if="{{isLastLevel}}" bindtap="restartLevel">再来一轮</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 失败弹窗 -->
+  <view class="overlay" wx:if="{{showFail}}" catchtap="noop">
+    <view class="overlay-card fail-card" catchtap="noop">
+      <text class="overlay-icon">{{status === 'timeout' ? '⏰' : '😔'}}</text>
+      <text class="overlay-title">挑战失败</text>
+      <text class="overlay-desc">{{failReason}}</text>
+      <view class="overlay-divider"></view>
+      <view class="overlay-stats">
+        <view class="stat-item">
+          <text class="stat-label">本关得分</text>
+          <text class="stat-value">{{score}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">累计总分</text>
+          <text class="stat-value gold">{{totalScore}}</text>
+        </view>
+      </view>
+      <text class="overlay-prompt">是否重新开始本关？</text>
+      <view class="overlay-btns">
+        <view class="overlay-btn primary" bindtap="restartLevel">重新开始</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关卡选择面板 -->
+  <view class="overlay" wx:if="{{showLevelSelect}}" catchtap="closeLevelSelect">
+    <view class="level-select-card" catchtap="noop">
+      <text class="ls-title">选择关卡</text>
+      <text class="ls-desc">点击任意关卡直接开始挑战</text>
+      <view class="ls-grid">
+        <view class="ls-item {{item.id === level ? 'active' : ''}} {{item.id > unlockedUpTo ? 'locked' : ''}}"
+          wx:for="{{levels}}" wx:key="id"
+          data-lv="{{item.id}}"
+          bindtap="goToLevel">
+          <text class="ls-lock" wx:if="{{item.id > unlockedUpTo}}">🔒</text>
+          <text class="ls-num">{{item.id}}</text>
+          <text class="ls-name">{{item.name}}</text>
+        </view>
+      </view>
+      <view class="overlay-btn secondary" style="width:100%;" bindtap="closeLevelSelect">关闭</view>
+    </view>
+  </view>
+</view>

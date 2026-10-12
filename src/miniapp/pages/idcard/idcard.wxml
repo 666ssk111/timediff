@@ -1,0 +1,68 @@
+<!-- pages/idcard/idcard.wxml —— 身份证解析 -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">🪪</view>
+    <view class="hero-title">身份证解析</view>
+    <view class="hero-desc">本地校验并提取出生、性别、籍贯等信息</view>
+  </view>
+
+  <view class="body">
+    <view class="card">
+      <view class="field">
+        <text class="label">身份证号码</text>
+        <view class="input-wrap">
+          <input class="id-input" placeholder="请输入 18 位身份证号" placeholder-class="id-ph"
+                 value="{{idNumber}}" bindinput="onInput" maxlength="18" />
+          <view class="clear-btn" wx:if="{{idNumber}}" bindtap="clear" hover-class="clear-hover">✕</view>
+        </view>
+      </view>
+
+      <button class="parse-btn" bindtap="parse" hover-class="parse-btn-hover">开始解析</button>
+    </view>
+
+    <!-- 结果 -->
+    <view class="result" wx:if="{{result}}">
+      <!-- 校验状态 -->
+      <view class="status {{result.valid ? 'ok' : 'bad'}}">
+        <text class="status-icon">{{result.valid ? '✓' : '!'}}</text>
+        <text class="status-text">{{result.valid ? '校验码正确，身份证号码有效' : '校验码不匹配，请核对输入'}}</text>
+      </view>
+
+      <!-- 基本信息 -->
+      <view class="info-card">
+        <view class="info-item">
+          <text class="info-label">籍贯</text>
+          <text class="info-value">{{result.province}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">出生日期</text>
+          <text class="info-value">{{result.birthday}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">年龄</text>
+          <text class="info-value">{{result.age}} 岁</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">性别</text>
+          <text class="info-value">{{result.gender}}</text>
+        </view>
+      </view>
+
+      <!-- 趣味信息 -->
+      <view class="fun-row">
+        <view class="fun-item">
+          <text class="fun-icon">🐾</text>
+          <text class="fun-label">生肖</text>
+          <text class="fun-value">{{result.zodiac}}</text>
+        </view>
+        <view class="fun-item">
+          <text class="fun-icon">✨</text>
+          <text class="fun-label">星座</text>
+          <text class="fun-value">{{result.constellation}}</text>
+        </view>
+      </view>
+
+      <view class="privacy-note">🔒 数据仅在本机解析，不会上传或存储</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,125 @@
+/* pages/account-category/account-category.wxss */
+.page { min-height: 100vh; background: #F5F6FA; padding-bottom: 40rpx; }
+
+/* 顶部 */
+.hero {
+  background: linear-gradient(160deg, #14B8A6 0%, #2DD4BF 100%);
+  padding: 40rpx 40rpx 60rpx;
+  color: #FFFFFF;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  right: -50rpx;
+  top: -50rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+.hero-cat-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  font-weight: 700;
+  margin: 0 auto 16rpx;
+  position: relative;
+  z-index: 1;
+}
+.hero-title { font-size: 40rpx; font-weight: 700; position: relative; z-index: 1; }
+.hero-sub { margin-top: 8rpx; font-size: 24rpx; color: rgba(255, 255, 255, 0.7); position: relative; z-index: 1; }
+.hero-total { margin-top: 24rpx; position: relative; z-index: 1; }
+.total-label { display: block; font-size: 24rpx; color: rgba(255, 255, 255, 0.7); }
+.total-num { display: block; margin-top: 6rpx; font-size: 52rpx; font-weight: 800; }
+
+.body { padding: 0 32rpx; margin-top: 24rpx; }
+
+/* 按天分组 */
+.day-list { margin-bottom: 80rpx; }
+.day-group { margin-bottom: 12rpx; }
+
+.day-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 28rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(31, 41, 55, 0.04);
+}
+.day-row-hover { opacity: 0.85; }
+
+.day-row-left { display: flex; align-items: center; }
+.day-expand {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #9CA3AF;
+  font-weight: 700;
+  margin-right: 16rpx;
+  transition: transform 0.2s ease;
+}
+.day-expand.expanded { transform: rotate(90deg); background: #D1FAE5; color: #14B8A6; }
+.day-date { font-size: 28rpx; font-weight: 600; color: #1F2937; }
+
+.day-row-right { display: flex; gap: 20rpx; }
+.day-expense { font-size: 24rpx; color: #EF4444; font-weight: 600; }
+.day-total { font-size: 24rpx; font-weight: 700; color: #EF4444; }
+
+/* 展开明细 */
+.day-bills {
+  margin-top: 8rpx;
+  padding: 8rpx 0 4rpx 16rpx;
+  border-left: 3rpx solid #D1FAE5;
+  margin-left: 20rpx;
+}
+
+.bill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  margin-bottom: 8rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(31, 41, 55, 0.03);
+}
+.bill-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+.bill-cat-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.cat-expense { background: #FEE2E2; color: #EF4444; }
+.bill-info { margin-left: 20rpx; flex: 1; min-width: 0; }
+.bill-cat { font-size: 28rpx; color: #1F2937; font-weight: 500; }
+.bill-note { display: block; margin-top: 4rpx; font-size: 24rpx; color: #9CA3AF; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bill-amount { font-size: 30rpx; font-weight: 700; color: #1F2937; flex-shrink: 0; }
+
+/* 加载中 */
+.loading { padding: 80rpx 0; text-align: center; }
+.loading-text { font-size: 28rpx; color: #9CA3AF; }
+
+/* 空状态 */
+.empty { padding: 80rpx 0; text-align: center; }
+.empty-icon { font-size: 80rpx; }
+.empty-text { display: block; margin-top: 20rpx; font-size: 30rpx; color: #6B7280; font-weight: 600; }

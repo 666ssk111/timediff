@@ -1,0 +1,92 @@
+<!-- pages/ocr/ocr.wxml —— OCR 识别与翻译 -->
+<view class="page">
+  <!-- 隐藏的压缩画布 -->
+  <canvas type="2d" id="compressCanvas" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;"></canvas>
+
+  <view class="hero">
+    <view class="hero-icon">📷</view>
+    <view class="hero-title">OCR 与翻译</view>
+    <view class="hero-desc">拍照识别文字，多语言即时翻译</view>
+  </view>
+
+  <!-- 模式切换 -->
+  <view class="tab-wrap">
+    <view class="tab {{tab === 'ocr' ? 'active' : ''}}" data-tab="ocr" bindtap="switchTab">
+      <text>📷 文字识别</text>
+    </view>
+    <view class="tab {{tab === 'translate' ? 'active' : ''}}" data-tab="translate" bindtap="switchTab">
+      <text>🌐 翻译</text>
+    </view>
+  </view>
+
+  <!-- OCR 模式 -->
+  <view class="body" wx:if="{{tab === 'ocr'}}">
+    <view class="card">
+      <view class="upload-area" bindtap="chooseImage" hover-class="upload-hover">
+        <block wx:if="{{imagePath}}">
+          <image class="preview" src="{{imagePath}}" mode="aspectFit" />
+        </block>
+        <block wx:else>
+          <view class="upload-icon">📷</view>
+          <text class="upload-text">拍照或选择图片</text>
+          <text class="upload-sub">支持印刷体文字识别</text>
+        </block>
+      </view>
+
+      <button class="primary-btn" bindtap="recognize" hover-class="btn-hover" loading="{{recognizing}}">
+        {{recognizing ? '识别中...' : '开始识别'}}
+      </button>
+
+      <!-- 识别结果 -->
+      <view class="section" wx:if="{{ocrText}}">
+        <view class="section-head">
+          <text class="section-title">识别结果</text>
+          <view class="section-actions">
+            <text class="section-action" bindtap="copyOcr">复制</text>
+            <text class="section-action sep" bindtap="useOcrToTranslate">去翻译 →</text>
+          </view>
+        </view>
+        <textarea class="result-text" value="{{ocrText}}" bindinput="onOcrInput" maxlength="-1" auto-height />
+      </view>
+    </view>
+  </view>
+
+  <!-- 翻译模式 -->
+  <view class="body" wx:else>
+    <view class="card">
+      <!-- 输入区 -->
+      <view class="field">
+        <view class="label-row">
+          <text class="label">输入文字</text>
+          <text class="label-hint" wx:if="{{inputText}}">{{inputText.length}} 字</text>
+        </view>
+        <textarea class="input-text" placeholder="请输入要翻译的内容..." placeholder-class="ph"
+                  value="{{inputText}}" bindinput="onInputText" maxlength="5000" auto-height />
+      </view>
+
+      <!-- 语言选择 -->
+      <view class="field">
+        <text class="label">目标语言</text>
+        <picker mode="selector" range="{{langs}}" range-key="name" value="{{targetLangIndex}}" bindchange="onLangChange">
+          <view class="picker">
+            <text class="picker-text">{{langs[targetLangIndex].name}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <button class="primary-btn" bindtap="translate" hover-class="btn-hover" loading="{{translating}}">
+        {{translating ? '翻译中...' : '开始翻译'}}
+      </button>
+
+      <!-- 翻译结果 -->
+      <view class="section" wx:if="{{translateResult}}">
+        <view class="section-head">
+          <text class="section-title">翻译结果</text>
+          <text class="section-action" bindtap="copyTranslate">复制</text>
+        </view>
+        <view class="result-box">{{translateResult}}</view>
+      </view>
+    </view>
+  </view>
+</view>

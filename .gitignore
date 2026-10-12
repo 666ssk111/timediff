@@ -1,0 +1,167 @@
+# ============================================================================
+# 密钥 / 环境变量 —— 绝不能进仓库
+# ============================================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+*.jks
+*.keystore
+secrets/
+secret/
+credentials.json
+service-account*.json
+
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+venv/
+ENV/
+env/
+.venv/
+.venv*/
+virtualenv/
+
+# 测试与检查缓存
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.cover
+.hypothesis/
+
+# ============================================================================
+# Node / 前端工具链
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+.yarn/
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# ============================================================================
+# 微信开发者工具 / 小程序
+# ============================================================================
+# 个人本地配置，不同机器不一样，不入库
+project.private.config.json
+.wechat/
+miniprogram_npm/
+# 云托管打包产物
+*.wxapkg
+
+# ============================================================================
+# 编辑器与 IDE
+# ============================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+*.code-workspace
+
+# ============================================================================
+# 大文件 / 二进制 / 数据集
+#   字体、压缩包、模型等一律不进 Git；需要分发时用 Git LFS 或 Releases。
+#   说明见 README「大文件怎么处理」一节。
+# ============================================================================
+# 字体（头像壁纸渲染用；镜像里通过 apt 安装系统字体代替）
+*.ttc
+*.ttf
+*.otf
+*.woff
+*.woff2
+fonts/
+
+# 压缩包与归档
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.bz2
+*.xz
+
+# 图片 / 音视频等大体积素材
+*.psd
+*.ai
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.flac
+
+# 数据集与模型
+*.csv
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.bin
+*.model
+data/*.zip
+datasets/
+models/
+checkpoints/
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+
+# 日志（注意：必须锚定到仓库根目录的 /logs/，
+# 否则会误伤小程序里的 src/miniapp/pages/logs/ 页面）
+*.log
+/logs/

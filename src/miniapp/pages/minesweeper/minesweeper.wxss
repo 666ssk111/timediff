@@ -1,0 +1,174 @@
+/* pages/minesweeper/minesweeper.wxss */
+.page { min-height: 100vh; background: #0F172A; }
+
+/* ===== 难度选择 ===== */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx 60rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+.menu-hero { text-align: center; margin-bottom: 60rpx; }
+.menu-icon { font-size: 96rpx; margin-bottom: 20rpx; }
+.menu-title {
+  font-size: 56rpx; font-weight: 800; color: #F1F5F9;
+  letter-spacing: 16rpx;
+}
+.menu-sub { margin-top: 12rpx; font-size: 26rpx; color: #64748B; }
+
+.menu-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  width: 100%;
+  max-width: 560rpx;
+}
+.level-card {
+  background: #1E293B;
+  border: 2rpx solid #334155;
+  border-radius: 28rpx;
+  padding: 36rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  transition: all 0.15s;
+}
+.level-card:active {
+  background: #334155;
+  border-color: #8B5CF6;
+  transform: scale(0.98);
+}
+.level-icon { font-size: 52rpx; width: 80rpx; text-align: center; }
+.level-label { font-size: 34rpx; font-weight: 700; color: #F1F5F9; }
+.level-desc { margin-top: 4rpx; font-size: 24rpx; color: #64748B; }
+
+.menu-tip { margin-top: 48rpx; font-size: 24rpx; color: #475569; text-align: center; }
+
+/* ===== 游戏界面 ===== */
+.game { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* 顶栏 */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 32rpx;
+  background: #1E293B;
+  border-bottom: 1rpx solid #334155;
+}
+.top-back { font-size: 30rpx; color: #8B5CF6; font-weight: 600; }
+.top-difficulty { font-size: 28rpx; color: #94A3B8; font-weight: 600; }
+
+/* 状态面板 */
+.status-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60rpx;
+  padding: 28rpx 32rpx;
+  background: #1E293B;
+  border-bottom: 1rpx solid #1E293B;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  min-width: 100rpx;
+}
+.stat-icon { font-size: 32rpx; }
+.stat-num { font-size: 36rpx; font-weight: 800; color: #F1F5F9; font-variant-numeric: tabular-nums; }
+.stat-center { border-left: 1rpx solid #334155; border-right: 1rpx solid #334155; padding: 0 40rpx; }
+
+/* 棋盘 */
+.board-scroll {
+  flex: 1;
+  padding: 20rpx;
+  overflow-x: auto;
+}
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  align-items: center;
+}
+.board-hard { width: max-content; }
+
+.row { display: flex; gap: 4rpx; }
+
+.cell {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 10rpx;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 700;
+  transition: background 0.08s;
+  border: 1rpx solid #1E293B;
+}
+.cell:active { opacity: 0.7; }
+
+/* 已翻开 */
+.cell.open { background: #1E293B; border-color: #0F172A; }
+
+/* 插旗 */
+.cell.flag { background: #FDE047; border-color: #CA8A04; }
+
+/* 踩雷 */
+.cell.bomb { background: #DC2626; border-color: #991B1B; }
+
+/* 数字颜色 */
+.num { font-weight: 800; }
+.num-1 { color: #60A5FA; }
+.num-2 { color: #34D399; }
+.num-3 { color: #F87171; }
+.num-4 { color: #A78BFA; }
+.num-5 { color: #F472B6; }
+.num-6 { color: #22D3EE; }
+.num-7 { color: #FBBF24; }
+.num-8 { color: #94A3B8; }
+
+/* ===== 结果弹窗 ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal {
+  background: #1E293B;
+  border-radius: 36rpx;
+  padding: 56rpx 48rpx 40rpx;
+  width: 560rpx;
+  text-align: center;
+  border: 1rpx solid #334155;
+}
+.modal-emoji { font-size: 80rpx; margin-bottom: 16rpx; }
+.modal-title { font-size: 38rpx; font-weight: 800; color: #F1F5F9; margin-bottom: 12rpx; }
+.modal-desc { font-size: 28rpx; color: #94A3B8; margin-bottom: 4rpx; }
+.modal-difficulty { font-size: 24rpx; color: #64748B; margin-bottom: 32rpx; }
+
+.modal-btns { display: flex; justify-content: center; gap: 20rpx; }
+.modal-btn {
+  padding: 20rpx 48rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+.modal-btn.primary {
+  background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+  color: #fff;
+}
+.modal-btn.secondary {
+  background: #334155;
+  color: #94A3B8;
+  border: 1rpx solid #475569;
+}

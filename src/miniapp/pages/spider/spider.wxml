@@ -1,0 +1,145 @@
+<!-- pages/spider/spider.wxml —— 蜘蛛纸牌 -->
+<view class="page">
+  <!-- ========== 模式选择 ========== -->
+  <view class="mode-mask" wx:if="{{showModeSelect}}">
+    <view class="mode-card">
+      <view class="mode-close" bindtap="closeMenu" wx:if="{{status !== 'idle'}}">✕</view>
+      <text class="mode-spider">🕷️</text>
+      <text class="mode-title">蜘蛛纸牌</text>
+      <text class="mode-subtitle">{{status === 'idle' ? '请选择难度' : '选择难度将重新开始'}}</text>
+      <view class="mode-list">
+        <view class="mode-item" data-mode="easy" bindtap="selectMode">
+          <text class="mi-icon">🕸️</text>
+          <view class="mi-body">
+            <text class="mi-name">初级</text>
+            <text class="mi-desc">1种花色 · 8副牌</text>
+          </view>
+          <text class="mi-arrow">›</text>
+        </view>
+        <view class="mode-item" data-mode="medium" bindtap="selectMode">
+          <text class="mi-icon">🕸️</text>
+          <view class="mi-body">
+            <text class="mi-name">中级</text>
+            <text class="mi-desc">2种花色 · 4副牌</text>
+          </view>
+          <text class="mi-arrow">›</text>
+        </view>
+        <view class="mode-item" data-mode="hard" bindtap="selectMode">
+          <text class="mi-icon">🕸️</text>
+          <view class="mi-body">
+            <text class="mi-name">高级</text>
+            <text class="mi-desc">4种花色 · 2副牌</text>
+          </view>
+          <text class="mi-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 游戏区域 ========== -->
+  <block wx:if="{{!showModeSelect}}">
+    <!-- 顶部状态栏 -->
+    <view class="top-bar">
+      <view class="tb-left">
+        <view class="tb-stat">
+          <text class="tb-label">分数</text>
+          <text class="tb-value">{{score}}</text>
+        </view>
+        <view class="tb-stat">
+          <text class="tb-label">步数</text>
+          <text class="tb-value">{{moves}}</text>
+        </view>
+      </view>
+      <view class="tb-center">
+        <text class="tb-mode-name">{{mode === 'easy' ? '初级' : mode === 'medium' ? '中级' : '高级'}}</text>
+      </view>
+      <view class="tb-right">
+        <view class="tb-foundations">
+          <view wx:for="{{[1,2,3,4,5,6,7,8]}}" wx:key="*this" class="tb-fd {{index < foundations ? 'done' : ''}}">
+            <text wx:if="{{index < foundations}}" class="tb-fd-king">♚</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 牌列区域（用普通 view + overflow-x:auto 避免原生组件遮挡弹窗） -->
+    <view class="columns-area">
+      <view class="columns-row">
+        <view wx:for="{{columns}}" wx:key="index" wx:for-index="colIdx"
+              class="column {{item.length === 0 ? 'empty' : ''}}"
+              style="height: {{columnsHeight[colIdx]}}rpx;"
+              data-col="{{colIdx}}"
+              bindtap="onColumnTap">
+          <view wx:for="{{item}}" wx:for-item="card" wx:key="row"
+                class="card {{card.faceUp ? 'face-up' : 'face-down'}} {{card.selected ? 'selected' : ''}} {{card.isNew ? 'card-new' : ''}} {{card.justMoved ? 'card-moved' : ''}}"
+                style="top: {{card.top}}rpx;{{card.isNew ? 'animation-delay:' + card.dealDelay + 'ms;' : ''}}"
+                data-col="{{colIdx}}"
+                data-row="{{card.row}}"
+                catchtap="onCardTap">
+            <!-- 亮牌 -->
+            <block wx:if="{{card.faceUp}}">
+              <text class="card-rank">{{card.rankText}}</text>
+              <text class="card-suit {{card.isRed ? 'red' : 'black'}}">{{card.suitSymbol}}</text>
+            </block>
+            <!-- 暗牌 -->
+            <block wx:else>
+              <view class="card-back">
+                <view class="card-back-pattern"></view>
+              </view>
+            </block>
+          </view>
+          <!-- 空列占位 -->
+          <view wx:if="{{item.length === 0}}" class="empty-placeholder">
+            <text class="empty-text">空</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部操作栏 -->
+    <view class="bottom-bar">
+      <view class="stock-btn {{canDeal ? '' : 'disabled'}} {{stockEmpty ? 'empty' : ''}}" bindtap="onDeal">
+        <text class="stock-label">发牌</text>
+        <text class="stock-num" wx:if="{{!stockEmpty}}">({{stockCount}})</text>
+      </view>
+      <view class="bottom-actions">
+        <view class="ba-btn" bindtap="restartGame">重来</view>
+        <view class="ba-btn" bindtap="backToMenu">菜单</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- ========== 胜利弹窗 ========== -->
+  <view class="overlay" wx:if="{{showWin}}" catchtap="noop">
+    <view class="modal">
+      <text class="modal-icon">🎉</text>
+      <text class="modal-title">恭喜通关！</text>
+      <view class="modal-stats">
+        <text class="modal-stat">得分：{{score}}</text>
+        <text class="modal-stat">步数：{{moves}}</text>
+      </view>
+      <view class="modal-btns">
+        <view class="modal-btn primary" bindtap="restartGame">再来一次</view>
+        <view class="modal-btn secondary" wx:if="{{showNextMode}}" bindtap="nextMode">进入下一关</view>
+        <view class="modal-btn secondary" bindtap="exitGame">退出游戏</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 失败弹窗 ========== -->
+  <view class="overlay" wx:if="{{showLose}}" catchtap="noop">
+    <view class="modal">
+      <text class="modal-icon">😔</text>
+      <text class="modal-title">游戏结束</text>
+      <text class="modal-desc">没有可用的移动了</text>
+      <view class="modal-stats">
+        <text class="modal-stat">得分：{{score}}</text>
+        <text class="modal-stat">步数：{{moves}}</text>
+      </view>
+      <view class="modal-btns">
+        <view class="modal-btn primary" bindtap="restartGame">重新开始</view>
+        <view class="modal-btn secondary" bindtap="exitGame">退出游戏</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,142 @@
+<!-- pages/mine/mine.wxml —— 我的 -->
+<view class="mine">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="avatar-wrapper" bindtap="openEditModal">
+      <image 
+        wx:if="{{avatarUrl}}" 
+        class="avatar" 
+        src="{{avatarUrl}}" 
+        mode="aspectFill"
+      />
+      <view wx:else class="avatar-placeholder">
+        <text class="avatar-icon">👤</text>
+      </view>
+    </view>
+    
+    <view class="user-info">
+      <view wx:if="{{nickName}}" class="nick-name">{{nickName}}</view>
+      <view wx:else class="login-btn" bindtap="getUserProfile">点击登录</view>
+      <view class="edit-btn" bindtap="openEditModal">编辑资料</view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="menu-list">
+    <view class="menu-item" bindtap="openFeedbackModal">
+      <text class="menu-icon">💬</text>
+      <text class="menu-text">意见反馈</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="openNotifyPage">
+      <text class="menu-icon">🔔</text>
+      <text class="menu-text">消息通知</text>
+      <view class="menu-status {{webhookEnabled ? 'on' : 'off'}}">{{webhookEnabled ? '已开启' : '未开启'}}</view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 编辑资料弹窗 -->
+  <view class="modal" wx:if="{{showEditModal}}" bindtap="closeEditModal">
+    <view class="modal-content" catchtap="preventTap">
+      <view class="modal-title">编辑资料</view>
+      
+      <view class="form-item">
+        <text class="form-label">头像</text>
+        <view class="avatar-edit" bindtap="chooseAvatar">
+          <image 
+            wx:if="{{editAvatar}}" 
+            class="avatar-preview" 
+            src="{{editAvatar}}" 
+            mode="aspectFill"
+          />
+          <view wx:else class="avatar-placeholder">
+            <text class="avatar-icon">📷</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">昵称</text>
+        <input 
+          class="form-input" 
+          value="{{editNickName}}" 
+          bindinput="onNickNameInput"
+          placeholder="请输入昵称"
+          maxlength="20"
+        />
+      </view>
+
+      <view class="modal-actions">
+        <view class="btn-cancel" bindtap="closeEditModal">取消</view>
+        <view class="btn-confirm" bindtap="saveUserInfo">保存</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 反馈弹窗 -->
+  <view class="modal" wx:if="{{showFeedbackModal}}" bindtap="closeFeedbackModal">
+    <view class="modal-content" catchtap="preventTap">
+      <view class="modal-title">意见反馈</view>
+
+      <view class="feedback-wrapper">
+        <textarea
+          class="feedback-input"
+          value="{{feedbackContent}}"
+          bindinput="onFeedbackInput"
+          placeholder="请描述您遇到的问题或建议，帮助我们做得更好 ✨"
+          placeholder-class="feedback-placeholder"
+          show-confirm-bar="{{false}}"
+          auto-height
+          maxlength="2000"
+        />
+        <view class="feedback-footer">
+          <view class="feedback-count">{{feedbackLength}}/2000</view>
+          <view class="feedback-hint">💡 您的反馈将直达开发者</view>
+        </view>
+      </view>
+
+      <view class="modal-actions">
+        <view class="btn-cancel" bindtap="closeFeedbackModal">取消</view>
+        <view class="btn-confirm {{feedbackSubmitting ? 'disabled' : ''}}" bindtap="submitFeedback">
+          {{feedbackSubmitting ? '提交中...' : '提交'}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 通知设置弹窗 -->
+  <view class="modal" wx:if="{{showNotifyModal}}" bindtap="closeNotifyModal">
+    <view class="modal-content" catchtap="preventTap">
+      <view class="modal-title">通知设置</view>
+
+      <view class="notify-desc">
+        配置通知地址后，用户提交反馈时您将收到实时提醒
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">Webhook 地址</text>
+        <textarea
+          class="form-input notify-input"
+          value="{{notifyWebhookUrl}}"
+          bindinput="onNotifyUrlInput"
+          placeholder="粘贴 Server 酱的 SendKey 地址&#10;例如：https://sctapi.ftqq.com/你的key.send"
+          placeholder-class="form-placeholder"
+          auto-height
+        />
+      </view>
+
+      <view class="notify-tips">
+        <view class="notify-tip-title">如何获取？</view>
+        <view class="notify-tip-item">1. 打开 sct.ftqq.com 用微信扫码登录</view>
+        <view class="notify-tip-item">2. 复制你的 SendKey 地址</view>
+        <view class="notify-tip-item">3. 粘贴到上方输入框并保存</view>
+      </view>
+
+      <view class="modal-actions">
+        <view class="btn-cancel" bindtap="closeNotifyModal">取消</view>
+        <view class="btn-confirm" bindtap="saveNotifyConfig">保存并测试</view>
+      </view>
+    </view>
+  </view>
+</view>

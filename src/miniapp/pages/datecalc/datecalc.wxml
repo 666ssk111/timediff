@@ -1,0 +1,28 @@
+<!-- pages/datecalc/datecalc.wxml —— 日期计算 -->
+<view class="page">
+  <view class="card">
+    <view class="card-title">时间间隔计算器</view>
+    <view class="card-sub">选择起止日期，快速计算相隔天数</view>
+
+    <view class="field">
+      <text class="label">开始日期</text>
+      <picker mode="date" value="{{startDate}}" bindchange="bindStartDateChange">
+        <view class="picker {{startDate ? '' : 'picker-ph'}}">{{startDate || '请选择日期'}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <text class="label">结束日期</text>
+      <picker mode="date" value="{{endDate}}" bindchange="bindEndDateChange">
+        <view class="picker {{endDate ? '' : 'picker-ph'}}">{{endDate || '请选择日期'}}</view>
+      </picker>
+    </view>
+
+    <button class="btn" bindtap="calculate" hover-class="btn-hover">计算时间间隔</button>
+
+    <view class="result" wx:if="{{result}}">
+      <text class="result-label">计算结果</text>
+      <text class="result-value">{{result}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,18 @@
+# 项目配置：ruff（静态检查）+ pytest（测试）
+# 依赖清单位于 requirements.txt / requirements-dev.txt
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+# 小程序前端与文档不属于 Python 检查范围
+extend-exclude = ["src/miniapp", "docs"]
+
+[tool.ruff.lint]
+# 只开启高信号规则：语法错误、未定义名字、重复定义等真实缺陷。
+# 这些规则在现有代码上应当零告警，一旦告警就是真 bug。
+select = ["E9", "F63", "F7", "F82"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+filterwarnings = ["ignore::DeprecationWarning"]

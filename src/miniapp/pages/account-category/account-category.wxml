@@ -1,0 +1,57 @@
+<!-- pages/account-category/account-category.wxml -->
+<view class="page">
+  <!-- 顶部汇总 -->
+  <view class="hero">
+    <view class="hero-cat-icon">{{categoryFirst}}</view>
+    <view class="hero-title">{{category}}</view>
+    <view class="hero-sub">{{currentMonth}} · 共 {{recordCount}} 笔</view>
+    <view class="hero-total">
+      <text class="total-label">合计支出</text>
+      <text class="total-num">¥{{totalExpense}}</text>
+    </view>
+  </view>
+
+  <view class="body">
+    <!-- 按天分组 -->
+    <view class="day-list" wx:if="{{dayGroups.length > 0 && !loading}}">
+      <view class="day-group" wx:for="{{dayGroups}}" wx:key="date">
+        <!-- 日期行 -->
+        <view class="day-row" data-date="{{item.date}}" bindtap="toggleDay" hover-class="day-row-hover">
+          <view class="day-row-left">
+            <view class="day-expand {{expandedDates[item.date] ? 'expanded' : ''}}">›</view>
+            <text class="day-date">{{item.dateLabel}}</text>
+          </view>
+          <view class="day-row-right">
+            <text class="day-expense">支 {{item.expense}}</text>
+            <text class="day-total">合计: -{{item.total >= 0 ? '' : '-'}}{{item.total}}</text>
+          </view>
+        </view>
+
+        <!-- 展开明细 -->
+        <view class="day-bills" wx:if="{{expandedDates[item.date]}}">
+          <view class="bill" wx:for="{{item.bills}}" wx:for-item="bill" wx:key="id">
+            <view class="bill-left">
+              <view class="bill-cat-icon cat-expense">{{bill.categoryFirst}}</view>
+              <view class="bill-info">
+                <text class="bill-cat">{{bill.category}}</text>
+                <text class="bill-note" wx:if="{{bill.note}}">{{bill.note}}</text>
+              </view>
+            </view>
+            <text class="bill-amount expense">{{bill.amountSign}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{dayGroups.length === 0 && !loading}}">
+      <view class="empty-icon">📋</view>
+      <text class="empty-text">本月暂无{{category}}消费记录</text>
+    </view>
+  </view>
+</view>

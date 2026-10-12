@@ -1,0 +1,108 @@
+<!-- pages/tax/tax.wxml —— 所有金额已在 JS 中预格式化 -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">🧾</view>
+    <view class="hero-title">个税计算器</view>
+    <view class="hero-desc">累计预扣预缴法 · 支持专项附加扣除与年终奖</view>
+  </view>
+
+  <view class="body">
+    <view class="card">
+      <view class="card-title">收入信息</view>
+
+      <view class="field">
+        <text class="label">税前月薪（元）</text>
+        <view class="input-wrap">
+          <text class="unit">¥</text>
+          <input class="input" type="digit" placeholder="请输入月薪" placeholder-class="in-ph"
+                 value="{{monthlyIncome}}" data-field="monthlyIncome" bindinput="onInput" />
+        </view>
+      </view>
+
+      <view class="field">
+        <text class="label">五险一金个人部分（元/月）</text>
+        <input class="input-simple" type="digit" placeholder="0" placeholder-class="in-ph"
+               value="{{socialInsurance}}" data-field="socialInsurance" bindinput="onInput" />
+      </view>
+
+      <view class="field">
+        <text class="label">当年已任职月数</text>
+        <view class="month-row">
+          <view class="month-btn {{months === 1 ? 'active' : ''}}" data-month="1" bindtap="onMonthChange">1</view>
+          <view class="month-btn {{months === 3 ? 'active' : ''}}" data-month="3" bindtap="onMonthChange">3</view>
+          <view class="month-btn {{months === 6 ? 'active' : ''}}" data-month="6" bindtap="onMonthChange">6</view>
+          <view class="month-btn {{months === 12 ? 'active' : ''}}" data-month="12" bindtap="onMonthChange">12</view>
+        </view>
+      </view>
+
+      <view class="field">
+        <text class="label">年终奖（元，可选）</text>
+        <input class="input-simple" type="digit" placeholder="0" placeholder-class="in-ph"
+               value="{{annualBonus}}" data-field="annualBonus" bindinput="onInput" />
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">专项附加扣除</view>
+      <view class="card-sub">勾选你符合条件的项目（每月标准）</view>
+
+      <view class="deduction-list">
+        <view class="deduction-item {{item.checked ? 'checked' : ''}}"
+              wx:for="{{deductions}}" wx:key="key"
+              data-key="{{item.key}}" bindtap="onToggleDeduction">
+          <view class="ded-check">
+            <text wx:if="{{item.checked}}">✓</text>
+          </view>
+          <view class="ded-body">
+            <text class="ded-name">{{item.name}}</text>
+            <text class="ded-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <button class="calc-btn" bindtap="calcTax" hover-class="calc-btn-hover">计算个税</button>
+
+    <view class="result" wx:if="{{result}}">
+      <view class="r-card">
+        <text class="r-label">当月税后收入</text>
+        <view class="r-value">
+          <text class="r-currency">¥</text>
+          <text class="r-num">{{result.takeHomeStr}}</text>
+        </view>
+      </view>
+
+      <view class="stats">
+        <view class="stat">
+          <text class="stat-num">¥{{result.annualTaxStr}}</text>
+          <text class="stat-label">全年个税（{{result.months}}个月）</text>
+        </view>
+        <view class="stat-div"></view>
+        <view class="stat">
+          <text class="stat-num">¥{{result.bonusTaxStr}}</text>
+          <text class="stat-label">年终奖个税</text>
+        </view>
+        <view class="stat-div"></view>
+        <view class="stat">
+          <text class="stat-num">¥{{result.totalTaxStr}}</text>
+          <text class="stat-label">个税合计</text>
+        </view>
+      </view>
+
+      <view class="detail">
+        <view class="detail-row">
+          <text>累计应纳税所得额</text>
+          <text class="detail-val">¥{{result.taxableStr}}</text>
+        </view>
+        <view class="detail-row">
+          <text>适用税率</text>
+          <text class="detail-val rate">{{result.rate}}</text>
+        </view>
+        <view class="detail-row">
+          <text>专项附加扣除</text>
+          <text class="detail-val">{{result.deductions}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

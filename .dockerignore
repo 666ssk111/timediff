@@ -1,0 +1,56 @@
+# 构建上下文是仓库根目录，凡是与运行时镜像无关的内容一律不进镜像。
+
+# 版本控制与 CI
+.git/
+.github/
+
+# 开发/测试产物
+tests/
+docs/
+scripts/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+
+# 本地数据库与日志
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# 密钥（.env.example 是模板，需要保留）
+.env
+.env.*
+!.env.example
+
+# 小程序前端不需要进后端镜像
+src/miniapp/
+
+# Node 工具链
+node_modules/
+package.json
+package-lock.json
+pnpm-lock.yaml
+
+# 大文件与构建产物
+dist/
+build/
+*.zip
+*.ttc
+*.ttf
+*.otf
+
+# 镜像自身
+src/server/Dockerfile

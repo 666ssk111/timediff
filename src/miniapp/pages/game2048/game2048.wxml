@@ -1,0 +1,74 @@
+<!-- pages/game2048/game2048.wxml —— 2048 -->
+<view class="page">
+  <!-- 头部 -->
+  <view class="hero">
+    <view class="hero-left">
+      <view class="hero-icon">🔢</view>
+      <view class="hero-title">2048</view>
+      <view class="hero-desc">滑动合并数字，挑战 2048</view>
+    </view>
+    <view class="hero-right">
+      <view class="score-box">
+        <text class="score-label">得分</text>
+        <text class="score-value">{{score}}</text>
+      </view>
+      <view class="score-box best-box">
+        <text class="score-label">最高</text>
+        <text class="score-value">{{bestScore}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作栏 -->
+  <view class="toolbar">
+    <text class="toolbar-tip">← ↑ ↓ → 滑动操作</text>
+    <view class="toolbar-btn" bindtap="restart">新游戏</view>
+  </view>
+
+  <!-- 游戏面板 -->
+  <view class="board-wrap">
+    <view class="board"
+      bindtouchstart="onTouchStart"
+      bindtouchend="onTouchEnd">
+      <view class="board-grid">
+        <!-- 每个格子：背景 + 方块（方块通过 Grid 放在正确位置） -->
+        <view class="cell" wx:for="{{board}}" wx:key="row_col">
+          <view class="cell-bg"></view>
+          <view
+            class="tile tile-{{item.value}} {{item.isNew ? 'tile-new' : ''}} {{item.isMerged ? 'tile-merged' : ''}}"
+            wx:if="{{item.value > 0}}"
+            style="background: {{item.bg}}; color: {{item.color}}; font-size: {{item.fontSize * 56}}rpx;"
+          >
+            {{item.value}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 结果弹窗（胜利 / 失败） -->
+<view class="result-overlay" wx:if="{{showResult}}" catchtouchmove="noop">
+  <view class="result-card" catchtap="noop">
+    <view class="result-icon">{{resultIsWin ? '🏆' : '😔'}}</view>
+    <text class="result-title">{{resultTitle}}</text>
+    <text class="result-sub">{{resultSub}}</text>
+
+    <view class="result-scores">
+      <view class="rs-item">
+        <text class="rs-label">本局得分</text>
+        <text class="rs-value">{{resultScore}}</text>
+      </view>
+      <view class="rs-divider"></view>
+      <view class="rs-item">
+        <text class="rs-label">历史最高</text>
+        <text class="rs-value best">{{resultBest}}</text>
+      </view>
+    </view>
+
+    <view class="result-btns">
+      <view class="result-btn restart-btn" bindtap="restart">再来一局</view>
+      <view class="result-btn continue-btn" wx:if="{{resultIsWin}}" bindtap="continueAfterWin">继续挑战</view>
+    </view>
+  </view>
+</view>

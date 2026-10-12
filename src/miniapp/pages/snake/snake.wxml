@@ -1,0 +1,78 @@
+<!-- pages/snake/snake.wxml -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-left">
+      <view class="hero-icon">🐍</view>
+      <view class="hero-title">贪吃蛇</view>
+      <view class="hero-desc">经典贪吃蛇小游戏</view>
+    </view>
+    <!-- 得分（居中） -->
+    <view class="hero-score">
+      <text class="hero-score-label">得分</text>
+      <text class="hero-score-num">{{score}}</text>
+    </view>
+    <view class="hero-rank-btn" bindtap="showRank" hover-class="rank-btn-hover">
+      <text class="rank-btn-icon">🏆</text>
+      <text class="rank-btn-text">排行</text>
+    </view>
+  </view>
+
+  <view class="body">
+    <!-- 游戏区 -->
+    <view class="board">
+      <!-- 食物 -->
+      <view class="food" style="left: {{food.left}}; top: {{food.top}};"></view>
+      <!-- 蛇身 -->
+      <view
+        class="snake-seg {{item.isHead ? 'head' : ''}}"
+        wx:for="{{snakeView}}"
+        wx:key="index"
+        style="left: {{item.left}}; top: {{item.top}};"
+      ></view>
+      <!-- 遮罩 -->
+      <view class="overlay" wx:if="{{status !== 'playing'}}">
+        <view class="overlay-btn" bindtap="start" hover-class="ov-btn-hover">
+          {{status === 'over' ? '再来一局' : '开始游戏'}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 方向键（十字布局） -->
+    <view class="pad">
+      <view class="pad-row">
+        <view class="pad-btn" bindtap="onUp" hover-class="pad-hover">↑</view>
+      </view>
+      <view class="pad-row">
+        <view class="pad-btn" bindtap="onLeft" hover-class="pad-hover">←</view>
+        <view class="pad-btn" bindtap="onRight" hover-class="pad-hover">→</view>
+      </view>
+      <view class="pad-row">
+        <view class="pad-btn" bindtap="onDown" hover-class="pad-hover">↓</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 排行榜弹窗 -->
+  <view class="rank-mask" wx:if="{{showRank}}" bindtap="hideRank">
+    <view class="rank-popup" catchtap="noop">
+      <view class="rank-popup-header">
+        <text class="rank-popup-title">🏆 排行榜</text>
+        <view class="rank-popup-close" bindtap="hideRank" hover-class="rank-close-hover">✕</view>
+      </view>
+      <scroll-view class="rank-popup-list" scroll-y wx:if="{{leaderboard.length > 0}}">
+        <view class="rank-popup-item" wx:for="{{leaderboard}}" wx:key="index">
+          <view class="rank-popup-idx {{index < 3 ? 'rank-gold' : ''}} {{index === 0 ? 'rank-first' : ''}} {{index === 1 ? 'rank-second' : ''}} {{index === 2 ? 'rank-third' : ''}}">
+            <text wx:if="{{index === 0}}">🥇</text>
+            <text wx:elif="{{index === 1}}">🥈</text>
+            <text wx:elif="{{index === 2}}">🥉</text>
+            <text wx:else>{{index + 1}}</text>
+          </view>
+          <text class="rank-popup-score">{{item.best}} 分</text>
+        </view>
+      </scroll-view>
+      <view class="rank-popup-empty" wx:else>
+        <text>暂无排行数据</text>
+      </view>
+    </view>
+  </view>
+</view>

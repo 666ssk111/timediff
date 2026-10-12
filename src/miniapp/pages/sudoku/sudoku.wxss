@@ -1,0 +1,306 @@
+/* pages/sudoku/sudoku.wxss —— 数独 */
+.page {
+  height: 100vh;
+  background: #F0F4F8;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== 难度选择 ========== */
+.menu-mask {
+  position: absolute; inset: 0; z-index: 10;
+  background: rgba(15, 23, 42, 0.9);
+  display: flex; align-items: center; justify-content: center;
+}
+.menu-card {
+  width: 560rpx;
+  background: #1E293B;
+  border-radius: 32rpx;
+  padding: 48rpx 40rpx 40rpx;
+  border: 1rpx solid rgba(255,255,255,0.08);
+  box-shadow: 0 16rpx 48rpx rgba(0,0,0,0.5);
+  position: relative;
+}
+.menu-close {
+  position: absolute; top: 20rpx; right: 24rpx;
+  width: 48rpx; height: 48rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; color: rgba(255,255,255,0.5);
+  z-index: 2;
+}
+.menu-close:active { background: rgba(255,255,255,0.15); }
+.menu-icon { display: block; text-align: center; font-size: 64rpx; margin-bottom: 12rpx; }
+.menu-title { display: block; text-align: center; font-size: 40rpx; font-weight: 800; color: #E2E8F0; margin-bottom: 8rpx; }
+.menu-sub { display: block; text-align: center; font-size: 26rpx; color: #94A3B8; margin-bottom: 36rpx; }
+.menu-list { display: flex; flex-direction: column; gap: 16rpx; }
+.menu-item {
+  display: flex; align-items: center;
+  padding: 24rpx 28rpx;
+  background: rgba(255,255,255,0.04);
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255,255,255,0.06);
+}
+.menu-item:active { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.3); }
+.mi-icon { font-size: 40rpx; margin-right: 20rpx; }
+.mi-body { flex: 1; }
+.mi-name { display: block; font-size: 30rpx; font-weight: 700; color: #F1F5F9; }
+.mi-desc { display: block; font-size: 22rpx; color: #94A3B8; margin-top: 4rpx; }
+.mi-arrow { font-size: 36rpx; color: #3B82F6; }
+
+/* ========== 状态栏 ========== */
+.status-bar {
+  display: flex;
+  padding: 20rpx 24rpx;
+  background: #1E293B;
+  gap: 0;
+}
+.sb-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.sb-label {
+  font-size: 20rpx;
+  color: #94A3B8;
+}
+.sb-value {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #F1F5F9;
+  margin-top: 2rpx;
+}
+.sb-value.err { color: #F87171; }
+
+/* ========== 棋盘 ========== */
+.board-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx;
+}
+.board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 680rpx;
+  border: 4rpx solid #0F172A;
+  border-radius: 12rpx;
+  overflow: hidden;
+  gap: 0;
+  background: transparent;
+  contain: layout;
+}
+
+/* 格子 */
+.cell {
+  aspect-ratio: 1;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #1E293B;
+  position: relative;
+  box-sizing: border-box;
+  border-right: 1rpx solid #CBD5E1;
+  border-bottom: 1rpx solid #CBD5E1;
+}
+.cell:active { background: #E2E8F0; }
+
+/* 填入数字 */
+.cell-value {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+/* 笔记 3x3 子网格 */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 2rpx;
+  box-sizing: border-box;
+}
+.note-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18rpx;
+  font-weight: 500;
+  color: #64748B;
+  line-height: 1;
+}
+
+/* 中心标记：仅 1 个候选数时放大居中显示 */
+.cell-center-mark {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #94A3B8;
+  opacity: 0.65;
+}
+
+/* 冲突预警：候选数为空，前期逻辑错误 */
+.cell-empty-candidate {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #EF4444;
+  opacity: 0.8;
+}
+
+/* 固定数字 */
+.cell.fixed {
+  font-weight: 700;
+  color: #1E293B;
+  background: #F8FAFC;
+}
+
+/* 提示数字 */
+.cell.hint {
+  color: #3B82F6;
+  font-weight: 700;
+}
+
+/* 选中 */
+.cell.selected {
+  background: #BFDBFE !important;
+  box-shadow: inset 0 0 0 3rpx #3B82F6;
+  z-index: 1;
+}
+
+/* 冲突 */
+.cell.conflict {
+  background: #FEE2E2 !important;
+  color: #EF4444 !important;
+}
+
+/* 候选数为空（悖论预警） */
+.cell.empty-candidate {
+  background: #FEF2F2 !important;
+  box-shadow: inset 0 0 0 3rpx #EF4444;
+}
+
+/* 相同数字高亮 */
+.cell.same-num {
+  background: #E0E7FF;
+}
+
+/* 3x3 宫格边界 —— 粗线分隔 */
+.cell.br-thick {
+  border-right: 4rpx solid #0F172A;
+}
+.cell.bl-thick {
+  border-left: 4rpx solid #0F172A;
+}
+.cell.bb-thick {
+  border-bottom: 4rpx solid #0F172A;
+}
+.cell.bt-thick {
+  border-top: 4rpx solid #0F172A;
+}
+
+/* ========== 操作栏 ========== */
+.actions {
+  display: flex;
+  gap: 8rpx;
+  padding: 12rpx 16rpx;
+  background: #1E293B;
+}
+.act-btn {
+  flex: 1;
+  text-align: center;
+  padding: 14rpx 0;
+  font-size: 24rpx;
+  color: #94A3B8;
+  background: rgba(255,255,255,0.06);
+  border-radius: 12rpx;
+  font-weight: 500;
+}
+.act-hover { background: rgba(255,255,255,0.12); color: #F1F5F9; }
+.act-btn.note-active {
+  background: #3B82F6;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* ========== 数字键盘 ========== */
+.numpad {
+  display: flex;
+  gap: 8rpx;
+  padding: 12rpx 16rpx 20rpx;
+  background: #1E293B;
+}
+.num-btn {
+  flex: 1;
+  aspect-ratio: 1;
+  max-height: 100rpx;
+  background: #334155;
+  border-radius: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #F1F5F9;
+}
+.num-hover { background: #3B82F6; transform: scale(0.95); }
+.num-done {
+  background: #065F46 !important;
+  color: #6EE7B7 !important;
+  font-size: 36rpx !important;
+  opacity: 0.7;
+}
+
+/* ========== 胜利弹窗 ========== */
+.win-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+}
+.win-card {
+  width: 560rpx;
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 48rpx 40rpx 40rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 16rpx 48rpx rgba(0,0,0,0.2);
+}
+.win-icon { font-size: 80rpx; margin-bottom: 12rpx; }
+.win-title { font-size: 40rpx; font-weight: 800; color: #1E293B; margin-bottom: 8rpx; }
+.win-sub { font-size: 26rpx; color: #94A3B8; margin-bottom: 32rpx; }
+.win-scores {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 24rpx 0;
+  background: #F8FAFC;
+  border-radius: 20rpx;
+  margin-bottom: 32rpx;
+}
+.ws-item { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.ws-label { font-size: 22rpx; color: #94A3B8; margin-bottom: 6rpx; }
+.ws-value { font-size: 36rpx; font-weight: 800; color: #1E293B; }
+.ws-value.err { color: #EF4444; }
+.ws-divider { width: 2rpx; height: 52rpx; background: #E2E8F0; }
+.win-btns { width: 100%; }
+.win-btn {
+  width: 100%;
+  padding: 22rpx 0;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  text-align: center;
+}
+.win-btn.primary { background: #3B82F6; color: #FFFFFF; }

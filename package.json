@@ -1,0 +1,26 @@
+{
+  "name": "timediff",
+  "version": "1.0.0",
+  "private": true,
+  "description": "微信小程序工具箱：25 个日常小工具 + Flask 后端（部署于微信云托管）",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "lint": "node scripts/check-js.mjs",
+    "check": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/666ssk111/timediff.git"
+  },
+  "keywords": [
+    "wechat",
+    "miniprogram",
+    "miniapp",
+    "flask",
+    "toolbox",
+    "微信小程序"
+  ]
+}

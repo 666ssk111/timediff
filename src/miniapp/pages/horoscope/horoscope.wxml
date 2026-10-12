@@ -1,0 +1,93 @@
+<!-- pages/horoscope/horoscope.wxml -->
+<view class="page">
+  <view class="hero">
+    <view class="star star1">✦</view>
+    <view class="star star2">✦</view>
+    <view class="star star3">✧</view>
+    <view class="hero-icon">✨</view>
+    <view class="hero-title">星座运势</view>
+    <view class="hero-desc">每日运势 · 幸运指南</view>
+  </view>
+
+  <view class="body">
+    <!-- 星座选择 -->
+    <view class="sign-grid">
+      <view class="sign {{signIndex === index ? 'active' : ''}}"
+            wx:for="{{signs}}" wx:key="en"
+            data-index="{{index}}" bindtap="onSign">
+        <text class="sign-icon">{{item.icon}}</text>
+        <text class="sign-name">{{item.name}}</text>
+      </view>
+    </view>
+
+    <!-- 日期选择（前后各 7 天） -->
+    <view class="date-bar">
+      <view class="date-info">
+        <text class="date-label">查询日期</text>
+        <text class="date-hint">可选当天前后各 7 天</text>
+      </view>
+      <picker mode="date" value="{{date}}" start="{{minDate}}" end="{{maxDate}}" bindchange="onDateChange">
+        <view class="date-picker">{{date}} <text class="date-arrow">▾</text></view>
+      </picker>
+    </view>
+
+    <!-- 结果 -->
+    <view class="result" wx:if="{{result}}">
+      <!-- 幸运卡 -->
+      <view class="lucky-card">
+        <view class="lucky-head">
+          <text class="lucky-icon">{{result.icon}}</text>
+          <view class="lucky-title">
+            <text class="lucky-sign">{{result.sign}}</text>
+            <text class="lucky-date">{{result.date}}</text>
+          </view>
+        </view>
+        <view class="lucky-summary">{{result.summary}}</view>
+        <view class="lucky-row">
+          <view class="lucky-item">
+            <text class="li-label">幸运色</text>
+            <text class="li-value">{{result.lucky_color}}</text>
+          </view>
+          <view class="lucky-divider"></view>
+          <view class="lucky-item">
+            <text class="li-label">幸运数字</text>
+            <text class="li-value">{{result.lucky_number}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 五维评分 -->
+      <view class="score-card">
+        <view class="score-title">今日运势评分</view>
+        <view class="dim" wx:for="{{dimensions}}" wx:key="key">
+          <text class="dim-icon">{{item.icon}}</text>
+          <text class="dim-label">{{item.label}}</text>
+          <view class="dim-track">
+            <view class="dim-fill" style="width: {{result[item.key]}}%;"></view>
+          </view>
+          <text class="dim-num">{{result[item.key]}}</text>
+        </view>
+      </view>
+
+      <!-- 各维度解读 -->
+      <view class="detail-card">
+        <view class="detail-row">
+          <text class="detail-label">💕 爱情</text>
+          <text class="detail-text">{{result.love_text}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">💼 事业</text>
+          <text class="detail-text">{{result.career_text}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">💰 财运</text>
+          <text class="detail-text">{{result.wealth_text}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">🍀 健康</text>
+          <text class="detail-text">{{result.health_text}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

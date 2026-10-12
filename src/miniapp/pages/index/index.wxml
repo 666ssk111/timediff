@@ -1,0 +1,65 @@
+<!-- pages/index/index.wxml —— 工具箱首页（固定不可滑动） -->
+<view class="home" style="padding-top: {{statusBarHeight}}px;">
+  <!-- 顶部渐变标题 -->
+  <view class="hero">
+    <view class="hero-title">工具箱</view>
+    <view class="hero-row">
+      <text class="hero-sub">实用工具 · 趣味小游戏 · 一站搞定</text>
+      <view class="hero-tag">21 个工具</view>
+    </view>
+  </view>
+
+  <!-- 实用工具（2 排水平滑动） -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">实用工具</text>
+      <text class="section-count">{{practicalTools.length}} 项</text>
+    </view>
+    <scroll-view class="scroll-row" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="scroll-inner scroll-practical">
+        <view
+          class="cell"
+          wx:for="{{practicalTools}}"
+          wx:key="url"
+          data-url="{{item.url}}"
+          bindtap="goTool"
+          hover-class="cell-hover"
+          hover-stay-time="80"
+        >
+          <view class="cell-icon" style="background: {{item.bg}};">{{item.icon}}</view>
+          <text class="cell-name">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 趣味小游戏（3 排水平滑动） -->
+  <view class="section section-fun">
+    <view class="section-head">
+      <text class="section-title">趣味小游戏</text>
+      <text class="section-count">{{funTools.length}} 项</text>
+    </view>
+    <scroll-view class="scroll-row" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="scroll-inner scroll-fun">
+        <view
+          class="fun-card"
+          wx:for="{{funTools}}"
+          wx:key="url"
+          data-url="{{item.url}}"
+          bindtap="goTool"
+          hover-class="fun-card-hover"
+          hover-stay-time="80"
+        >
+          <view class="fun-icon" style="background: {{item.bg}};">{{item.icon}}</view>
+          <view class="fun-body">
+            <view class="fun-name">{{item.name}}</view>
+            <view class="fun-desc">{{item.desc}}</view>
+          </view>
+          <text class="fun-arrow">›</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="footer-tip">更多记忆持续回复中…</view>
+</view>

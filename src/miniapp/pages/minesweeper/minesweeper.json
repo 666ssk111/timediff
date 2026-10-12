@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "扫雷",
+  "navigationBarBackgroundColor": "#0F172A",
+  "navigationBarTextStyle": "white",
+  "disableScroll": true,
+  "usingComponents": {}
+}

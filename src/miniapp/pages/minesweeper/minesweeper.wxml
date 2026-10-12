@@ -1,0 +1,77 @@
+<!-- pages/minesweeper/minesweeper.wxml -->
+<view class="page">
+  <!-- ===== 难度选择 ===== -->
+  <view class="menu" wx:if="{{phase === 'menu'}}">
+    <view class="menu-hero">
+      <view class="menu-icon">💣</view>
+      <view class="menu-title">扫 雷</view>
+      <view class="menu-sub">经典扫雷小游戏</view>
+    </view>
+    <view class="menu-cards">
+      <view class="level-card" wx:for="{{levels}}" wx:key="key" data-key="{{item.key}}" bindtap="selectLevel">
+        <view class="level-icon">{{item.icon}}</view>
+        <view class="level-label">{{item.label}}</view>
+        <view class="level-desc">{{item.desc}}</view>
+      </view>
+    </view>
+    <view class="menu-tip">💡 点击格子翻开 · 长按插旗标记</view>
+  </view>
+
+  <!-- ===== 游戏界面 ===== -->
+  <view class="game" wx:if="{{phase === 'playing' || phase === 'win' || phase === 'lose'}}">
+    <!-- 顶部状态栏 -->
+    <view class="top-bar">
+      <view class="top-back" bindtap="backToMenu">‹ 返回</view>
+      <view class="top-info">
+        <view class="top-difficulty">{{difficulty === 'easy' ? '初级' : difficulty === 'medium' ? '中级' : '高级'}}</view>
+      </view>
+    </view>
+
+    <!-- 状态面板 -->
+    <view class="status-panel">
+      <view class="stat">
+        <view class="stat-icon">🚩</view>
+        <view class="stat-num">{{flags}}</view>
+      </view>
+      <view class="stat stat-center">
+        <view class="stat-icon">⏱</view>
+        <view class="stat-num">{{time}}s</view>
+      </view>
+      <view class="stat">
+        <view class="stat-icon">💣</view>
+        <view class="stat-num">{{mineCount}}</view>
+      </view>
+    </view>
+
+    <!-- 棋盘 -->
+    <scroll-view class="board-scroll" scroll-x="{{difficulty === 'hard'}}" scroll-y="{{false}}" wx:if="{{grid.length > 0}}">
+      <view class="board {{difficulty === 'hard' ? 'board-hard' : ''}}">
+        <view class="row" wx:for="{{grid}}" wx:for-item="row" wx:key="r">
+          <view
+            class="cell {{cell.revealed ? 'open' : ''}} {{cell.flagged && !cell.revealed ? 'flag' : ''}} {{cell.bomb && cell.revealed ? 'bomb' : ''}}"
+            wx:for="{{row}}" wx:for-item="cell" wx:key="c"
+            data-r="{{cell.r}}" data-c="{{cell.c}}"
+            bindtap="onTap" bindlongpress="onLongPress"
+          >
+            <text wx:if="{{cell.revealed && !cell.bomb && cell.adjacent > 0}}" class="num num-{{cell.adjacent}}">{{cell.adjacent}}</text>
+            <text wx:if="{{cell.revealed && cell.bomb}}">💥</text>
+            <text wx:if="{{cell.flagged && !cell.revealed}}" class="flag-icon">🚩</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 结果弹窗 -->
+    <view class="overlay" wx:if="{{phase === 'win' || phase === 'lose'}}">
+      <view class="modal">
+        <view class="modal-emoji">{{phase === 'win' ? '🎉' : '💥'}}</view>
+        <view class="modal-title">{{phase === 'win' ? '恭喜通关！' : '踩到地雷了'}}</view>
+        <view class="modal-desc">用时 {{time}} 秒</view>
+        <view class="modal-difficulty">{{difficulty === 'easy' ? '初级' : difficulty === 'medium' ? '中级' : '高级'}}难度</view>
+        <view class="modal-btns">
+          <view class="modal-btn secondary" bindtap="backToMenu">返回菜单</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

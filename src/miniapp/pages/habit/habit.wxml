@@ -1,0 +1,117 @@
+<!-- pages/habit/habit.wxml —— 喝水打卡 + 日历历史 -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">💧</view>
+    <view class="hero-title">喝水打卡</view>
+    <view class="hero-desc">记录每日饮水，养成健康好习惯</view>
+  </view>
+
+  <view class="body">
+    <!-- 进度卡 -->
+    <view class="progress-card">
+      <view class="cup-count">
+        <text class="cup-num">{{todayCount}}</text>
+        <text class="cup-unit">/ {{target}} 杯</text>
+      </view>
+      <text class="cup-goal">今日饮水进度</text>
+
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{percent}}%;"></view>
+      </view>
+      <text class="progress-text">已完成 {{percent}}%</text>
+
+      <!-- 喝水按钮 -->
+      <view class="drink-btn" bindtap="drink" hover-class="drink-btn-hover">
+        <text class="drink-icon">💧</text>
+        <text class="drink-text">喝一杯</text>
+        <text class="drink-sub">+1 杯</text>
+      </view>
+    </view>
+
+    <!-- 连续打卡 -->
+    <view class="streak-card">
+      <text class="streak-icon">🔥</text>
+      <text class="streak-text">已连续打卡</text>
+      <text class="streak-num">{{streak}}</text>
+      <text class="streak-text">天</text>
+    </view>
+
+    <!-- 近 7 天 -->
+    <view class="week-card">
+      <view class="week-title">近 7 天记录（点击可查看详情）</view>
+      <view class="week-row">
+        <view class="week-day" wx:for="{{week}}" wx:key="date" data-date="{{item.date}}" bindtap="onWeekDayTap">
+          <text class="wd-label">{{item.dayLabel}}</text>
+          <view class="wd-dot {{item.count > 0 ? (item.full ? 'full' : 'has') : ''}} {{item.isToday ? 'today' : ''}}">
+            {{item.count}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 查看历史按钮 -->
+    <view class="history-toggle" bindtap="toggleCalendar">
+      <text class="history-icon">📅</text>
+      <text class="history-text">{{showCalendar ? '收起日历' : '查看历史记录'}}</text>
+      <text class="history-arrow {{showCalendar ? 'up' : ''}}">›</text>
+    </view>
+
+    <!-- 日历视图 -->
+    <view class="calendar-card" wx:if="{{showCalendar}}">
+      <!-- 月份导航 -->
+      <view class="cal-header">
+        <view class="cal-nav-btn" bindtap="prevMonth">‹</view>
+        <text class="cal-title">{{calTitle}}</text>
+        <view class="cal-nav-btn {{calIsCurrentMonth ? 'disabled' : ''}}" bindtap="nextMonth">›</view>
+      </view>
+
+      <!-- 星期标题 -->
+      <view class="cal-weekdays">
+        <text class="cal-weekday" wx:for="{{['日','一','二','三','四','五','六']}}" wx:key="*this">{{item}}</text>
+      </view>
+
+      <!-- 日期网格 -->
+      <view class="cal-grid">
+        <view 
+          class="cal-day {{item.empty ? 'empty' : ''}} {{item.isFuture ? 'future' : ''}} {{item.isToday ? 'today' : ''}} {{item.hasCheckin ? (item.full ? 'full' : 'has') : ''}}" 
+          wx:for="{{calDays}}" 
+          wx:key="index"
+          data-date="{{item.date}}"
+          bindtap="{{item.isFuture ? '' : 'onDayTap'}}"
+        >
+          <text class="cal-day-num" wx:if="{{!item.empty}}">{{item.day}}</text>
+          <view class="cal-dot {{item.hasCheckin ? (item.full ? 'dot-full' : 'dot-has') : ''}}" wx:if="{{!item.empty && item.hasCheckin}}"></view>
+        </view>
+      </view>
+
+      <!-- 图例 -->
+      <view class="cal-legend">
+        <view class="legend-item">
+          <view class="legend-dot dot-has"></view>
+          <text>已打卡</text>
+        </view>
+        <view class="legend-item">
+          <view class="legend-dot dot-full"></view>
+          <text>已达标</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 日详情弹窗 -->
+    <view class="day-detail-mask" wx:if="{{showDayDetail}}" bindtap="closeDayDetail">
+      <view class="day-detail-card" catchtap="preventTap">
+        <text class="day-detail-date">{{selectedDate}}</text>
+        <view class="day-detail-count">
+          <text class="day-detail-num">{{selectedCount}}</text>
+          <text class="day-detail-unit">杯</text>
+        </view>
+        <view class="day-detail-status">
+          <text wx:if="{{selectedCount >= target}}">✅ 已达标</text>
+          <text wx:elif="{{selectedCount > 0}}">💧 已打卡</text>
+          <text wx:else>😴 未打卡</text>
+        </view>
+        <view class="day-detail-close" bindtap="closeDayDetail">关闭</view>
+      </view>
+    </view>
+  </view>
+</view>

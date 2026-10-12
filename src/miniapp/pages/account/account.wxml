@@ -1,0 +1,146 @@
+<!-- pages/account/account.wxml -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">💰</view>
+    <view class="hero-title">记账本</view>
+    <view class="hero-desc">记录每一笔收支，轻松管理你的财务</view>
+  </view>
+
+  <view class="body">
+    <view class="card summary-card" wx:if="{{summary}}">
+      <view class="month-nav">
+        <view class="nav-arrow" bindtap="prevMonth">‹</view>
+        <text class="month-text">{{currentMonth}}</text>
+        <view class="nav-arrow" bindtap="nextMonth">›</view>
+      </view>
+
+      <view class="balance-row">
+        <text class="balance-label">本月结余</text>
+        <view class="balance-num {{summary.balanceClass}}">
+          {{summary.balanceSign}}{{summary.balanceStr}}
+        </view>
+      </view>
+
+      <view class="in-ex-row">
+        <view class="in-ex">
+          <text class="ie-label">收入</text>
+          <text class="ie-num income">+{{summary.incomeStr}}</text>
+        </view>
+        <view class="in-ex-div"></view>
+        <view class="in-ex">
+          <text class="ie-label">支出</text>
+          <text class="ie-num expense">-{{summary.expenseStr}}</text>
+        </view>
+      </view>
+
+      <view class="cat-breakdown" wx:if="{{summary.categoryBreakdown.length > 0}}">
+        <view class="cat-title">支出分类</view>
+        <view class="cat-bar" wx:for="{{summary.categoryBreakdown}}" wx:for-item="cat" wx:key="name"
+              bindtap="onCategoryTap" data-category="{{cat.name}}" hover-class="cat-bar-hover">
+          <view class="cat-name">{{cat.name}}</view>
+          <view class="cat-track">
+            <view class="cat-fill" style="width: {{cat.percent}}%;"></view>
+          </view>
+          <view class="cat-amount">{{cat.totalStr}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 每日账单（按天分组） -->
+    <view class="list-header">
+      <text class="list-title">每日账单</text>
+      <text class="list-count">{{dayGroups.length}} 天</text>
+    </view>
+
+    <view class="day-list" wx:if="{{dayGroups.length > 0}}">
+      <view class="day-group" wx:for="{{dayGroups}}" wx:key="date">
+        <!-- 日期行（点击箭头展开/收起，点击行本身记一笔） -->
+        <view class="day-row" data-date="{{item.date}}" data-datelabel="{{item.dateLabel}}" bindtap="onDayTap" hover-class="day-row-hover">
+          <view class="day-row-left">
+            <view class="day-expand {{expandedDates[item.date] ? 'expanded' : ''}}" data-date="{{item.date}}" catchtap="toggleDay">›</view>
+            <text class="day-date">{{item.dateLabel}}</text>
+          </view>
+          <view class="day-row-right">
+            <text class="day-income" wx:if="{{item.income > 0}}">收 {{item.income}}</text>
+            <text class="day-expense" wx:if="{{item.expense > 0}}">支 {{item.expense}}</text>
+            <text class="day-total {{item.total >= 0 ? 'total-plus' : 'total-minus'}}">合计: {{item.total >= 0 ? '+' : ''}}{{item.total}}</text>
+          </view>
+        </view>
+
+        <!-- 展开的账单明细 -->
+        <view class="day-bills" wx:if="{{expandedDates[item.date]}}">
+          <view class="bill" wx:for="{{item.bills}}" wx:for-item="bill" wx:key="id">
+            <view class="bill-left">
+              <view class="bill-cat-icon {{bill.categoryClass}}">{{bill.categoryFirst}}</view>
+              <view class="bill-info">
+                <text class="bill-cat">{{bill.category}}</text>
+                <text class="bill-note" wx:if="{{bill.note}}">{{bill.note}}</text>
+              </view>
+            </view>
+            <view class="bill-right">
+              <text class="bill-amount {{bill.amountClass}}">{{bill.amountSign}}</text>
+              <view class="bill-del" data-id="{{bill.id}}" catchtap="remove" hover-class="bill-del-hover">✕</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty" wx:else>
+      <view class="empty-icon">📋</view>
+      <text class="empty-text">本月暂无账单</text>
+      <text class="empty-sub">点击下方按钮开始记账</text>
+    </view>
+  </view>
+
+  <view class="add-panel {{showAdd ? 'show' : ''}}" wx:if="{{showAdd}}">
+    <view class="panel-mask" bindtap="toggleAdd"></view>
+    <view class="panel">
+      <view class="panel-header">
+        <text class="panel-title">记一笔</text>
+        <view class="panel-close" bindtap="toggleAdd">✕</view>
+      </view>
+
+      <view class="type-row">
+        <view class="type-btn {{type === 2 ? 'active expense' : ''}}" data-type="2" bindtap="switchType">
+          <text>支出</text>
+        </view>
+        <view class="type-btn {{type === 1 ? 'active income' : ''}}" data-type="1" bindtap="switchType">
+          <text>收入</text>
+        </view>
+      </view>
+
+      <view class="field" wx:if="{{selectedDate}}">
+        <text class="label">日期</text>
+        <picker mode="date" value="{{selectedDate}}" start="{{dateMin}}" end="{{dateMax}}" bindchange="onDateChange">
+          <view class="date-display">{{selectedDateLabel}}</view>
+        </picker>
+      </view>
+
+      <view class="amount-input">
+        <text class="ai-currency">¥</text>
+        <input class="ai-input" type="digit" placeholder="0.00" placeholder-class="ai-ph"
+               value="{{amount}}" data-field="amount" bindinput="onInput" />
+      </view>
+
+      <view class="field">
+        <text class="label">分类</text>
+        <picker mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+          <view class="picker">{{category}}</view>
+        </picker>
+      </view>
+
+      <view class="field">
+        <text class="label">备注（可选）</text>
+        <input class="note-input" placeholder="添加备注..." placeholder-class="note-ph"
+               value="{{note}}" data-field="note" bindinput="onInput" />
+      </view>
+
+      <button class="save-btn" bindtap="add" hover-class="save-btn-hover">保存</button>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="toggleAdd" hover-class="fab-hover">
+    <text class="fab-icon">＋</text>
+  </view>
+</view>

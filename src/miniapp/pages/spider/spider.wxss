@@ -1,0 +1,233 @@
+/* pages/spider/spider.wxss —— 蜘蛛纸牌 */
+.page {
+  height: 100vh;
+  background: linear-gradient(180deg, #0d2818 0%, #1a3a2a 40%, #1b4d2e 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========== 模式选择 ========== */
+.mode-mask {
+  position: absolute; inset: 0; z-index: 10;
+  background: rgba(5, 15, 8, 0.92);
+  display: flex; align-items: center; justify-content: center;
+}
+.mode-card {
+  position: relative;
+  width: 560rpx;
+  background: #16281e;
+  border-radius: 32rpx;
+  padding: 48rpx 40rpx 40rpx;
+  border: 1rpx solid rgba(255,255,255,0.08);
+  box-shadow: 0 16rpx 48rpx rgba(0,0,0,0.5);
+}
+.mode-close {
+  position: absolute; top: 20rpx; right: 24rpx;
+  width: 48rpx; height: 48rpx;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; color: rgba(255,255,255,0.5);
+  z-index: 2;
+}
+.mode-close:active { background: rgba(255,255,255,0.15); }
+.mode-spider { display: block; text-align: center; font-size: 64rpx; margin-bottom: 12rpx; }
+.mode-title { display: block; text-align: center; font-size: 40rpx; font-weight: 800; color: #D1FAE5; margin-bottom: 8rpx; }
+.mode-subtitle { display: block; text-align: center; font-size: 26rpx; color: #6EE7B7; margin-bottom: 36rpx; }
+.mode-list { display: flex; flex-direction: column; gap: 16rpx; }
+.mode-item {
+  display: flex; align-items: center;
+  padding: 24rpx 28rpx;
+  background: rgba(255,255,255,0.04);
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255,255,255,0.06);
+}
+.mode-item:active { background: rgba(255,255,255,0.1); }
+.mi-icon { font-size: 40rpx; margin-right: 20rpx; }
+.mi-body { flex: 1; }
+.mi-name { display: block; font-size: 30rpx; font-weight: 700; color: #ECFDF5; }
+.mi-desc { display: block; font-size: 22rpx; color: #6EE7B7; margin-top: 4rpx; }
+.mi-arrow { font-size: 36rpx; color: #34D399; }
+
+/* ========== 顶部状态栏 ========== */
+.top-bar {
+  display: flex; align-items: center;
+  padding: 16rpx 20rpx;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10rpx);
+}
+.tb-left { display: flex; gap: 28rpx; flex: 1; }
+.tb-stat { display: flex; flex-direction: column; align-items: center; }
+.tb-label { font-size: 20rpx; color: #6EE7B7; }
+.tb-value { font-size: 28rpx; font-weight: 800; color: #ECFDF5; margin-top: 2rpx; }
+.tb-center { flex: 1; text-align: center; }
+.tb-mode-name { font-size: 28rpx; font-weight: 700; color: #A7F3D0; }
+.tb-right { flex: 1; display: flex; justify-content: flex-end; }
+.tb-foundations { display: flex; gap: 4rpx; }
+.tb-fd {
+  width: 32rpx; height: 32rpx;
+  border-radius: 6rpx;
+  border: 1rpx solid rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center;
+}
+.tb-fd.done { background: rgba(251,191,36,0.3); border-color: rgba(251,191,36,0.5); }
+.tb-fd-king { font-size: 20rpx; color: #FBBF24; }
+
+/* ========== 牌列区域 ========== */
+.columns-area {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 12rpx 8rpx 0;
+}
+.columns-area::-webkit-scrollbar { display: none; }
+.columns-row {
+  display: flex; flex-direction: row;
+  min-width: max-content;
+  align-items: flex-start;
+}
+.column {
+  position: relative;
+  width: 68rpx;
+  margin: 0 3rpx;
+  flex-shrink: 0;
+  border-radius: 10rpx;
+  background: rgba(0,0,0,0.12);
+}
+.column.empty { border: 1rpx dashed rgba(255,255,255,0.1); }
+.empty-placeholder {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.empty-text { font-size: 20rpx; color: rgba(255,255,255,0.15); }
+
+/* ========== 牌 ========== */
+.card {
+  position: absolute; left: 0; right: 0;
+  border-radius: 8rpx;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: top 0.15s ease;
+}
+.card.face-up {
+  width: 68rpx; height: 100rpx;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F3F4F6 100%);
+  border: 1rpx solid #D1D5DB;
+  box-shadow: 0 1rpx 3rpx rgba(0,0,0,0.15);
+}
+.card.face-down {
+  width: 68rpx; height: 100rpx;
+  border: 1rpx solid rgba(255,255,255,0.1);
+}
+.card.selected {
+  border: 2rpx solid #FBBF24 !important;
+  box-shadow: 0 0 12rpx rgba(251,191,36,0.5) !important;
+  transform: translateY(-4rpx);
+  z-index: 5;
+}
+
+/* 发牌动画 —— 从左到右依次出现 */
+.card.card-new {
+  animation: dealIn 0.38s ease-out both;
+}
+@keyframes dealIn {
+  0%   { opacity: 0; transform: translateY(-20rpx) scale(0.9); }
+  55%  { opacity: 1; transform: translateY(3rpx) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 移动动画 —— 轻弹入位 */
+.card.card-moved {
+  animation: moveIn 0.32s ease-out both;
+}
+@keyframes moveIn {
+  0%   { opacity: 0.4; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* 亮牌文字 */
+.card-rank {
+  font-size: 22rpx; font-weight: 800;
+  color: #1F2937;
+  margin-bottom: 2rpx;
+}
+.card-suit { font-size: 28rpx; line-height: 1; }
+.card-suit.red { color: #DC2626; }
+.card-suit.black { color: #1F2937; }
+
+/* 暗牌背面 */
+.card-back {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #1a237e 100%);
+  border-radius: 6rpx;
+  display: flex; align-items: center; justify-content: center;
+}
+.card-back-pattern {
+  width: 80%; height: 80%;
+  border-radius: 4rpx;
+  border: 1rpx solid rgba(255,255,255,0.15);
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 3rpx, rgba(255,255,255,0.04) 3rpx, rgba(255,255,255,0.04) 6rpx),
+    repeating-linear-gradient(-45deg, transparent, transparent 3rpx, rgba(255,255,255,0.04) 3rpx, rgba(255,255,255,0.04) 6rpx);
+}
+
+/* ========== 底部栏 ========== */
+.bottom-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16rpx 24rpx 24rpx;
+  background: rgba(0,0,0,0.3);
+}
+.stock-btn {
+  display: flex; align-items: center; gap: 8rpx;
+  padding: 16rpx 32rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #2563EB, #3B82F6);
+  box-shadow: 0 4rpx 12rpx rgba(37,99,235,0.4);
+}
+.stock-btn:active { opacity: 0.8; }
+.stock-btn.disabled { background: #374151; box-shadow: none; }
+.stock-btn.empty { background: #1F2937; box-shadow: none; }
+.stock-label { font-size: 26rpx; font-weight: 700; color: #FFFFFF; }
+.stock-num { font-size: 22rpx; color: rgba(255,255,255,0.7); }
+.bottom-actions { display: flex; gap: 16rpx; }
+.ba-btn {
+  padding: 14rpx 28rpx;
+  border-radius: 999rpx;
+  background: rgba(255,255,255,0.08);
+  color: #A7F3D0;
+  font-size: 24rpx; font-weight: 600;
+  border: 1rpx solid rgba(255,255,255,0.1);
+}
+.ba-btn:active { background: rgba(255,255,255,0.15); }
+
+/* ========== 弹窗 ========== */
+.overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+  background: rgba(5, 15, 8, 0.88);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  width: 560rpx;
+  background: #16281e;
+  border-radius: 32rpx;
+  padding: 48rpx 40rpx 40rpx;
+  border: 1rpx solid rgba(255,255,255,0.1);
+  box-shadow: 0 16rpx 48rpx rgba(0,0,0,0.5);
+}
+.modal-icon { display: block; text-align: center; font-size: 72rpx; margin-bottom: 16rpx; }
+.modal-title { display: block; text-align: center; font-size: 36rpx; font-weight: 800; color: #ECFDF5; margin-bottom: 8rpx; }
+.modal-desc { display: block; text-align: center; font-size: 26rpx; color: #6EE7B7; margin-bottom: 24rpx; }
+.modal-stats { display: flex; justify-content: center; gap: 40rpx; margin-bottom: 32rpx; }
+.modal-stat { font-size: 28rpx; color: #A7F3D0; font-weight: 600; }
+.modal-btns { display: flex; flex-direction: column; gap: 14rpx; }
+.modal-btn {
+  padding: 22rpx 0; border-radius: 16rpx;
+  text-align: center; font-size: 28rpx; font-weight: 700;
+}
+.modal-btn.primary { background: linear-gradient(135deg, #059669, #10B981); color: #FFFFFF; }
+.modal-btn.secondary { background: rgba(255,255,255,0.06); color: #A7F3D0; border: 1rpx solid rgba(255,255,255,0.1); }
+.modal-btn:active { opacity: 0.8; }

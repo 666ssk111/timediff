@@ -1,0 +1,42 @@
+<!-- pages/meme/meme.wxml -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">😂</view>
+    <view class="hero-title">表情包生成器</view>
+    <view class="hero-desc">图片配上下文字，一键生成搞笑表情包</view>
+  </view>
+
+  <view class="body">
+    <view class="card">
+      <!-- 选图 -->
+      <view class="upload-area" bindtap="onChoose" hover-class="upload-hover">
+        <image wx:if="{{imagePath}}" class="preview" src="{{imagePath}}" mode="aspectFill" />
+        <view wx:else class="upload-placeholder">
+          <text class="upload-icon">🖼️</text>
+          <text class="upload-text">选择图片</text>
+        </view>
+      </view>
+
+      <!-- 文字 -->
+      <view class="field">
+        <text class="label">上方文字</text>
+        <input class="text-input" placeholder="如：你以为这样就结束了？" placeholder-class="ph"
+               value="{{topText}}" bindinput="onTop" />
+      </view>
+      <view class="field">
+        <text class="label">下方文字</text>
+        <input class="text-input" placeholder="如：这才刚刚开始" placeholder-class="ph"
+               value="{{bottomText}}" bindinput="onBottom" />
+      </view>
+
+      <button class="primary-btn" bindtap="render" hover-class="btn-hover">生成表情包</button>
+    </view>
+
+    <!-- 结果 -->
+    <view class="result" wx:if="{{result}}">
+      <image class="preview" src="{{result}}" mode="aspectFit" show-menu-by-longpress />
+      <button class="save-btn" bindtap="share" hover-class="btn-hover">发送给朋友 · 添加到表情</button>
+      <view class="share-tip">发送给朋友后，在聊天中长按表情即可添加到微信表情包</view>
+    </view>
+  </view>
+</view>

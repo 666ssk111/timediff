@@ -1,0 +1,72 @@
+<!-- pages/history/history.wxml —— 历史上的今天 -->
+<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
+  <view class="hero">
+    <view class="hero-icon">📅</view>
+    <view class="hero-title">历史上的今天</view>
+    <view class="hero-desc">查阅中国与世界的历史事件，内容合法合规</view>
+  </view>
+
+  <view class="body">
+    <!-- 查询区 -->
+    <view class="query-card">
+      <view class="field">
+        <text class="label">选择日期</text>
+        <picker
+          mode="multiSelector"
+          range="{{[monthRange, dayRange]}}"
+          value="{{pickerValue}}"
+          bindchange="onPickerChange"
+          bindcolumnchange="onPickerColumnChange"
+        >
+          <view class="date-picker">{{displayDate}}</view>
+        </picker>
+      </view>
+
+      <view class="quick-row">
+        <view class="quick-btn" bindtap="goToday" hover-class="quick-hover">今天</view>
+        <view class="quick-btn" bindtap="goRandom" hover-class="quick-hover">随机一天</view>
+      </view>
+
+      <button class="query-btn" bindtap="fetch" hover-class="btn-hover" loading="{{loading}}">
+        {{loading ? '查询中...' : '查询事件'}}
+      </button>
+    </view>
+
+    <!-- 有结果 -->
+    <view class="result" wx:if="{{result}}">
+      <view class="result-head">
+        <text class="result-date">{{result.display}}</text>
+        <text class="result-count">共 {{result.count}} 条</text>
+      </view>
+
+      <view class="timeline">
+        <view class="t-item" wx:for="{{result.items}}" wx:key="index">
+          <view class="t-left">
+            <view class="t-year">{{item.yearStr}}</view>
+          </view>
+          <view class="t-dot"></view>
+          <view class="t-card">
+            <view class="t-tags">
+              <text class="t-type">{{item.typeIcon}} {{item.type}}</text>
+              <text class="t-cat {{item.catClass}}">{{item.category}}</text>
+            </view>
+            <text class="t-title">{{item.title}}</text>
+            <text class="t-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 无合规结果 -->
+    <view class="empty" wx:if="{{empty}}">
+      <view class="empty-icon">🔒</view>
+      <view class="empty-title">抱歉，此事件无法查询</view>
+      <view class="empty-sub">该日期暂无公开、合法、合规的历史事件</view>
+    </view>
+
+    <!-- 合规声明 -->
+    <view class="notice">
+      <text>🛡️ 本页内容均来自公开、合法、合规的历史资料，仅展示正面与中性事件，不收录任何违规内容。</text>
+    </view>
+  </view>
+</scroll-view>

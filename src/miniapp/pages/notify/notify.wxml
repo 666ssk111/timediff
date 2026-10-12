@@ -1,0 +1,95 @@
+<!-- pages/notify/notify.wxml —— 消息通知设置 -->
+<view class="page">
+  <!-- 头部 -->
+  <view class="hero">
+    <view class="hero-icon">🔔</view>
+    <view class="hero-title">消息通知设置</view>
+    <view class="hero-desc">管理小程序的消息提醒，开启后可通过微信接收通知</view>
+  </view>
+
+  <view class="body">
+    <!-- 加载中 -->
+    <view class="loading-card" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <view wx:else>
+      <!-- 总开关 -->
+      <view class="card master-card">
+        <view class="master-row">
+          <view class="master-info">
+            <text class="master-icon">📢</text>
+            <view class="master-text">
+              <text class="master-title">消息通知</text>
+              <text class="master-desc">关闭后所有通知均不发送</text>
+            </view>
+          </view>
+          <switch 
+            checked="{{masterEnabled}}" 
+            bindchange="onMasterToggle"
+            color="#4F46E5"
+          />
+        </view>
+      </view>
+
+      <!-- 各类型通知 -->
+      <view class="section-title" wx:if="{{masterEnabled}}">通知类型</view>
+
+      <view class="card" wx:if="{{masterEnabled}}">
+        <!-- 喝水打卡提醒 -->
+        <view class="item-row">
+          <view class="item-info">
+            <text class="item-icon">💧</text>
+            <view class="item-text">
+              <text class="item-title">喝水打卡提醒</text>
+              <text class="item-desc">每天中午 12:00 若未打卡，则提醒你喝水</text>
+            </view>
+          </view>
+          <switch 
+            checked="{{drinkReminder}}" 
+            bindchange="onDrinkToggle"
+            color="#4F46E5"
+          />
+        </view>
+
+        <view class="divider"></view>
+
+        <!-- 待办提醒（预留） -->
+        <view class="item-row disabled">
+          <view class="item-info">
+            <text class="item-icon">📋</text>
+            <view class="item-text">
+              <text class="item-title">待办事项提醒</text>
+              <text class="item-desc">待办事项到期前提醒你处理</text>
+            </view>
+          </view>
+          <view class="coming-soon">即将上线</view>
+        </view>
+      </view>
+
+      <!-- 微信订阅消息 -->
+      <view class="section-title" wx:if="{{masterEnabled}}">微信订阅消息</view>
+
+      <view class="card subscribe-card" wx:if="{{masterEnabled}}">
+        <view class="subscribe-info">
+          <text class="subscribe-icon">💬</text>
+          <view class="subscribe-text">
+            <text class="subscribe-title">订阅消息推送</text>
+            <text class="subscribe-desc">授权后，我们将通过微信服务通知向你发送提醒</text>
+          </view>
+        </view>
+        <view class="subscribe-btn {{subscribed ? 'subscribed' : ''}}" bindtap="subscribeMessage">
+          <text>{{subscribed ? '已订阅 ✓' : '去订阅'}}</text>
+        </view>
+      </view>
+
+      <!-- 说明 -->
+      <view class="tips-card" wx:if="{{masterEnabled}}">
+        <view class="tips-title">💡 温馨提示</view>
+        <view class="tips-item">通知功能需要您授权微信订阅消息，未授权时仅在小程序内显示提醒</view>
+        <view class="tips-item">喝水提醒在每天中午 12:00 检查，若您当天已打卡则不会重复提醒</view>
+        <view class="tips-item">您可以随时在此页面关闭任意类型的通知</view>
+      </view>
+    </view>
+  </view>
+</view>

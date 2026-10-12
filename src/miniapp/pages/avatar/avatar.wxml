@@ -1,0 +1,42 @@
+<!-- pages/avatar/avatar.wxml -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">🎨</view>
+    <view class="hero-title">壁纸头像</view>
+    <view class="hero-desc">渐变背景 + 励志文案，一键生成专属壁纸</view>
+  </view>
+
+  <view class="body">
+    <view class="card">
+      <text class="label">选择模板</text>
+      <view class="tpl-grid">
+        <view class="tpl {{activeIndex === index ? 'active' : ''}}"
+              wx:for="{{templates}}" wx:key="id"
+              data-index="{{index}}" bindtap="onTemplate">
+          <view class="tpl-preview" style="background: {{item.gradient}};"></view>
+          <text class="tpl-name">{{item.quote}}</text>
+        </view>
+      </view>
+
+      <text class="label" style="margin-top: 28rpx;">自定义文案</text>
+      <input class="quote-input" placeholder="输入你想说的话（留空使用默认文案）"
+             placeholder-class="ph" value="{{quote}}" bindinput="onQuote" />
+
+      <text class="label" style="margin-top: 28rpx;">文字样式</text>
+      <picker mode="selector" range="{{fonts}}" range-key="name" value="{{activeFontIndex}}" bindchange="onFontChange">
+        <view class="picker">
+          <text class="picker-text">{{fonts[activeFontIndex] ? fonts[activeFontIndex].name : '宋体'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+
+      <button class="primary-btn" bindtap="render" hover-class="btn-hover">生成壁纸</button>
+    </view>
+
+    <!-- 结果 -->
+    <view class="result" wx:if="{{result}}">
+      <image class="preview" src="{{result}}" mode="aspectFit" show-menu-by-longpress />
+      <button class="save-btn" bindtap="save" hover-class="btn-hover">保存到相册</button>
+    </view>
+  </view>
+</view>

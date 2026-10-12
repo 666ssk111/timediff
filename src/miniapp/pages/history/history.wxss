@@ -1,0 +1,202 @@
+/* pages/history/history.wxss —— 历史上的今天 */
+.page { height: 100vh; background: #F5F6FA; }
+
+.hero {
+  background: linear-gradient(160deg, #EF4444 0%, #F97316 100%);
+  padding: 48rpx 40rpx 112rpx;
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  right: -40rpx;
+  top: -40rpx;
+  width: 220rpx;
+  height: 220rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+}
+.hero-icon { font-size: 72rpx; margin-bottom: 16rpx; position: relative; z-index: 1; }
+.hero-title { font-size: 44rpx; font-weight: 700; position: relative; z-index: 1; }
+.hero-desc { margin-top: 10rpx; font-size: 26rpx; color: rgba(255, 255, 255, 0.82); position: relative; z-index: 1; }
+
+.body { padding: 0 32rpx 60rpx; margin-top: -80rpx; position: relative; z-index: 2; }
+
+/* 查询卡片 */
+.query-card {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 36rpx;
+  box-shadow: 0 8rpx 24rpx rgba(31, 41, 55, 0.05);
+}
+.field { }
+.label { font-size: 26rpx; color: #6B7280; display: block; margin-bottom: 12rpx; }
+.date-picker {
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #F9FAFB;
+  border: 1rpx solid #E5E7EB;
+  border-radius: 20rpx;
+  padding: 0 28rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1F2937;
+  text-align: center;
+}
+
+.quick-row {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 24rpx;
+}
+.quick-btn {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  border-radius: 20rpx;
+  background: #FEF2F2;
+  color: #EF4444;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+.quick-hover { opacity: 0.8; }
+
+.query-btn {
+  margin-top: 24rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  background: linear-gradient(135deg, #EF4444 0%, #F97316 100%);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 700;
+  border-radius: 999rpx;
+  box-shadow: 0 8rpx 28rpx rgba(239, 68, 68, 0.35);
+}
+.query-btn::after { border: none; }
+.btn-hover { opacity: 0.88; }
+
+/* 结果 */
+.result { margin-top: 24rpx; }
+.result-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8rpx 16rpx;
+}
+.result-date { font-size: 32rpx; font-weight: 700; color: #1F2937; }
+.result-count { font-size: 24rpx; color: #9CA3AF; }
+
+/* 时间线 */
+.timeline { padding-left: 8rpx; }
+.t-item {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  padding-bottom: 28rpx;
+}
+.t-item::before {
+  content: '';
+  position: absolute;
+  left: 96rpx;
+  top: 24rpx;
+  bottom: -4rpx;
+  width: 2rpx;
+  background: #FDE8E8;
+}
+.t-item:last-child { padding-bottom: 8rpx; }
+.t-item:last-child::before { display: none; }
+
+.t-left {
+  width: 96rpx;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 8rpx;
+}
+.t-year {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #EF4444;
+  line-height: 1;
+}
+
+.t-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: #EF4444;
+  box-shadow: 0 0 0 6rpx #FDE8E8;
+  margin: 6rpx 20rpx 0 0;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.t-card {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 6rpx 20rpx rgba(31, 41, 55, 0.04);
+}
+
+.t-tags { display: flex; align-items: center; margin-bottom: 12rpx; }
+.t-type {
+  font-size: 22rpx;
+  color: #64748B;
+  font-weight: 600;
+  margin-right: 12rpx;
+}
+.t-cat {
+  padding: 2rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+.t-cat.cn { background: #FDE8E8; color: #EF4444; }
+.t-cat.intl { background: #EAF2FE; color: #3B82F6; }
+
+.t-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1.4;
+}
+.t-desc {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  color: #6B7280;
+  line-height: 1.6;
+}
+
+/* 空状态 */
+.empty {
+  margin-top: 24rpx;
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 80rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(31, 41, 55, 0.05);
+}
+.empty-icon { font-size: 88rpx; }
+.empty-title { margin-top: 24rpx; font-size: 32rpx; font-weight: 700; color: #1F2937; }
+.empty-sub { margin-top: 12rpx; font-size: 26rpx; color: #9CA3AF; }
+
+/* 合规声明 */
+.notice {
+  margin-top: 24rpx;
+  padding: 24rpx 28rpx;
+  background: #FEF7F7;
+  border: 1rpx solid #FDE8E8;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #9CA3AF;
+  line-height: 1.6;
+}

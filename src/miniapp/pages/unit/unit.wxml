@@ -1,0 +1,62 @@
+<!-- pages/unit/unit.wxml —— 单位换算 -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">📏</view>
+    <view class="hero-title">单位换算</view>
+    <view class="hero-desc">长度 / 重量 / 存储 / 温度，快速互转</view>
+  </view>
+
+  <view class="body">
+    <!-- 分类 -->
+    <view class="cat-tabs">
+      <view class="cat-tab {{categoryIndex === index ? 'active' : ''}}"
+            wx:for="{{categories}}" wx:key="key"
+            data-index="{{index}}" bindtap="onCategoryTap">
+        <text class="cat-icon">{{item.icon}}</text>
+        <text class="cat-name">{{item.name}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <!-- 数值输入 -->
+      <view class="value-input">
+        <input class="value-field" type="digit" placeholder="0" placeholder-class="value-ph"
+               value="{{value}}" bindinput="onValueInput" />
+        <text class="value-unit">{{units[fromIndex]}}</text>
+      </view>
+
+      <!-- 单位切换 -->
+      <view class="unit-row">
+        <picker mode="selector" range="{{units}}" value="{{fromIndex}}" bindchange="onFromChange">
+          <view class="unit-box">
+            <text class="unit-label">从</text>
+            <text class="unit-value">{{units[fromIndex]}}</text>
+          </view>
+        </picker>
+
+        <view class="swap-btn" bindtap="swap" hover-class="swap-hover">⇄</view>
+
+        <picker mode="selector" range="{{units}}" value="{{toIndex}}" bindchange="onToChange">
+          <view class="unit-box">
+            <text class="unit-label">到</text>
+            <text class="unit-value">{{units[toIndex]}}</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <button class="calc-btn" bindtap="convert" hover-class="calc-btn-hover">开始换算</button>
+
+    <!-- 结果 -->
+    <view class="result" wx:if="{{result !== ''}}">
+      <view class="r-card">
+        <text class="r-label">换算结果</text>
+        <view class="r-value">
+          <text class="r-num">{{result}}</text>
+          <text class="r-unit">{{resultUnit}}</text>
+        </view>
+        <text class="r-formula">{{formula}}</text>
+      </view>
+    </view>
+  </view>
+</view>

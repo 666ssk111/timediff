@@ -1,0 +1,100 @@
+<!-- pages/mortgage/mortgage.wxml —— 房贷计算器 -->
+<view class="page">
+  <view class="hero">
+    <view class="hero-icon">🏠</view>
+    <view class="hero-title">房贷计算器</view>
+    <view class="hero-desc">等额本息 / 等额本金，一键计算月供与总利息</view>
+  </view>
+
+  <view class="body">
+    <view class="card">
+      <view class="field">
+        <text class="label">贷款金额（万元）</text>
+        <view class="input-wrap">
+          <input class="input" type="digit" placeholder="如 100" placeholder-class="in-ph"
+                 value="{{principal}}" bindinput="onPrincipalInput" />
+          <text class="unit">万</text>
+        </view>
+      </view>
+
+      <view class="field">
+        <text class="label">贷款年限：{{years}} 年（{{years * 12}} 期）</text>
+        <picker mode="selector" range="{{yearOptions}}" value="4" bindchange="onYearChange">
+          <view class="picker">{{years}} 年</view>
+        </picker>
+      </view>
+
+      <view class="field">
+        <text class="label">年利率（%）</text>
+        <input class="input-simple" type="digit" placeholder="3.5" placeholder-class="in-ph"
+               value="{{rate}}" bindinput="onRateInput" />
+      </view>
+
+      <view class="field">
+        <text class="label">还款方式</text>
+        <view class="method-row">
+          <view class="method-btn {{method === 'equal_payment' ? 'active' : ''}}"
+                data-method="equal_payment" bindtap="setMethod">
+            <text class="method-name">等额本息</text>
+            <text class="method-desc">月供固定</text>
+          </view>
+          <view class="method-btn {{method === 'equal_principal' ? 'active' : ''}}"
+                data-method="equal_principal" bindtap="setMethod">
+            <text class="method-name">等额本金</text>
+            <text class="method-desc">月供递减</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <button class="calc-btn" bindtap="calc" hover-class="calc-btn-hover">开始计算</button>
+
+    <!-- 结果 -->
+    <view class="result" wx:if="{{result}}">
+      <view class="r-card">
+        <view class="r-tag">{{result.methodName}}</view>
+        <text class="r-label">{{result.monthlyLabel}}</text>
+        <view class="r-value">
+          <text class="r-currency">¥</text>
+          <text class="r-num">{{result.monthlyStr}}</text>
+        </view>
+        <text class="r-last" wx:if="{{result.lastStr}}">末月月供 ¥{{result.lastStr}}</text>
+      </view>
+
+      <view class="stats">
+        <view class="stat">
+          <text class="stat-num">¥{{result.totalInterestStr}}</text>
+          <text class="stat-label">总利息</text>
+        </view>
+        <view class="stat-div"></view>
+        <view class="stat">
+          <text class="stat-num">¥{{result.totalPaymentStr}}</text>
+          <text class="stat-label">本息合计</text>
+        </view>
+      </view>
+
+      <!-- 逐月明细 -->
+      <view class="detail-card">
+        <view class="detail-toggle" bindtap="toggleDetail">
+          <text>逐月还款明细（{{result.months}} 期）</text>
+          <text class="toggle-arrow">{{showDetail ? '收起 ▲' : '展开 ▼'}}</text>
+        </view>
+
+        <view class="schedule" wx:if="{{showDetail}}">
+          <view class="schedule-head">
+            <text class="col col-m">期数</text>
+            <text class="col">月供</text>
+            <text class="col">利息</text>
+            <text class="col">剩余本金</text>
+          </view>
+          <view class="schedule-row" wx:for="{{schedule}}" wx:key="month">
+            <text class="col col-m">{{item.month}}</text>
+            <text class="col">{{item.paymentStr}}</text>
+            <text class="col">{{item.interestStr}}</text>
+            <text class="col">{{item.balanceStr}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
